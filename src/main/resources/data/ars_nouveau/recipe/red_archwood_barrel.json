@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "ars_nouveau:red_archwood_planks"
+    },
+    "S": {
+      "item": "ars_nouveau:red_archwood_slab"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "P P",
+    "PSP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "ars_nouveau:red_archwood_barrel"
+  }
+}

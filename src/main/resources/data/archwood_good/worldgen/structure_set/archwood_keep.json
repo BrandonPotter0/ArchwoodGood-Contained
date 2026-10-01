@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "archwood_good:archwood_keep",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 18472033,
+    "spacing": 80,
+    "separation": 28,
+    "spread_type": "triangular"
+  }
+}

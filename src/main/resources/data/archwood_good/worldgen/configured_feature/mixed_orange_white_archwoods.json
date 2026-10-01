@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:simple_random_selector",
+  "config": {
+    "features": [
+      "archwood_good:placed_orange_archwood_tree",
+      "archwood_good:placed_white_archwood_tree"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "ars_elemental:yellow_archwood_logs"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "ars_elemental:yellow_archwood_planks"
+  }
+}

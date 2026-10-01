@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 0.5,
+        "feature": "archwood_good:placed_single_cave_white"
+      }
+    ],
+    "default": "archwood_good:placed_single_cave_blue"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "ars_nouveau:block/archwood_barrel_bottom",
+    "side": "ars_nouveau:block/barrel_side",
+    "top": "ars_nouveau:block/archwood_barrel_top_open",
+    "particle": "ars_nouveau:block/barrel_side"
+  }
+}

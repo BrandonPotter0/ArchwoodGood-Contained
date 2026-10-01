@@ -1,0 +1,62 @@
+{
+  "type": "minecraft:tree",
+  "config": {
+    "decorators": [],
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:dirt"
+      }
+    },
+    "foliage_placer": {
+      "type": "minecraft:blob_foliage_placer",
+      "height": 0,
+      "offset": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 0,
+        "max_inclusive": 0
+      },
+      "radius": {
+        "type": "minecraft:uniform",
+        "min_inclusive": 0,
+        "max_inclusive": 0
+      }
+    },
+    "foliage_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "ars_elemental:yellow_archwood_leaves",
+        "Properties": {
+          "distance": "7",
+          "persistent": "false",
+          "waterlogged": "false"
+        }
+      }
+    },
+    "force_dirt": true,
+    "ignore_vines": true,
+    "minimum_size": {
+      "type": "minecraft:two_layers_feature_size",
+      "limit": 2,
+      "lower_size": 0,
+      "upper_size": 2
+    },
+    "trunk_placer": {
+      "type": "archwood_good:giant_magic_trunk_placer",
+      "base_height": 12,
+      "height_rand_a": 1,
+      "height_rand_b": 0,
+      "isWorldGen": true,
+      "podID": "minecraft:air"
+    },
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "ars_elemental:yellow_archwood_log",
+        "Properties": {
+          "axis": "y"
+        }
+      }
+    }
+  }
+}

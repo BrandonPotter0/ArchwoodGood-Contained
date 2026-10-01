@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "ars_nouveau:archwood_forest",
+  "features": "archwood_good:placed_giant_archwood_forest",
+  "step": "vegetal_decoration"
+}

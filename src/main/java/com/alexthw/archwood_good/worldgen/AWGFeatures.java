@@ -1,0 +1,37 @@
+package com.alexthw.archwood_good.worldgen;
+
+import com.alexthw.archwood_good.ArchwoodGood;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+public class AWGFeatures {
+    public static final DeferredRegister<Feature<?>> FEATURES =
+            DeferredRegister.create(Registries.FEATURE, ArchwoodGood.MODID);
+    public static final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACERS =
+            DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, ArchwoodGood.MODID);
+
+    public static final DeferredHolder<Feature<?>, IcyMageLightFeature> ICY_MAGE_LIGHT =
+            FEATURES.register("icy_mage_light", () -> new IcyMageLightFeature(NoneFeatureConfiguration.CODEC));
+
+    public static final DeferredHolder<Feature<?>, GlacialFreezeFluidsFeature> GLACIAL_FREEZE_FLUIDS =
+            FEATURES.register("glacial_freeze_chunk", () -> new GlacialFreezeFluidsFeature(NoneFeatureConfiguration.CODEC));
+
+    public static final DeferredHolder<Feature<?>, GlacialPriorityTreeFeature> GLACIAL_PRIORITY_TREE =
+            FEATURES.register("glacial_priority_tree", () -> new GlacialPriorityTreeFeature(NoneFeatureConfiguration.CODEC));
+
+    public static final DeferredHolder<Feature<?>, GiantForestTreeFeature> GIANT_FOREST_TREE =
+            FEATURES.register("giant_forest_tree", () -> new GiantForestTreeFeature(NoneFeatureConfiguration.CODEC));
+
+    public static final DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<GiantMagicTrunkPlacer>> GIANT_MAGIC_TRUNK =
+            TRUNK_PLACERS.register("giant_magic_trunk_placer", () -> new TrunkPlacerType<>(GiantMagicTrunkPlacer.CODEC));
+
+    public static void register(IEventBus bus) {
+        FEATURES.register(bus);
+        TRUNK_PLACERS.register(bus);
+    }
+}

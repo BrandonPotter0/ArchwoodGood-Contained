@@ -1,0 +1,70 @@
+# This is an example mods.toml file. It contains the data relating to the loading mods.
+# There are several mandatory fields (#mandatory), and many more that are optional (#optional).
+# The overall format is standard TOML format, v0.5.0.
+# Note that there are a couple of TOML lists in this file.
+# Find more information on toml format here:  https://github.com/toml-lang/toml
+# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+modLoader="javafml" #mandatory
+# A version range to match for said mod loader - for regular FML @Mod it will be the forge version
+loaderVersion="[4,)" #mandatory (28 is current forge version)
+# A URL to refer people to when problems occur with this mod
+issueTrackerURL="https://github.com/Alexthw46/ArchwoodGood/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen" #optional
+
+license="GNU Lesser General Public License v3.0"
+# A list of mods - how many allowed here is determined by the individual mod loader
+[[mods]] #mandatory
+# The modid of the mod
+modId="archwood_good" #mandatory
+# The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
+version="1.2.54" #mandatory
+ # A display name for the mod
+displayName="Archwood Good" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification <here>
+#updateJSONURL="http://myurl.me/" #optional
+# A URL for the "homepage" for this mod, displayed in the mod UI
+#displayURL="http://example.com/" #optional
+# A file name (in the root of the mod JAR) containing a logo for display
+logoFile="logo.png" #optional
+# A text field displayed in the mod UI
+credits="The Floofy Poofy," #optional
+# A text field displayed in the mod UI
+authors="Alexthw, Xel'Bayria" #optional
+# The description text for the mod (multi line!) (#mandatory)
+description='''
+Added missing Wood Goods for WoodTypes from Ars Nouveau & Ars Elemental. Enhance the compatibility with Every Compat.
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.archwood_good]]
+modId = "minecraft"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.archwood_good]]
+modId = "ars_nouveau"
+versionRange = "[1.21.1-5.4,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.archwood_good]]
+modId = "ars_elemental"
+type = "optional"
+reason = "Adds flashing archwood compat"
+versionRange = "[0.7.0,)"
+ordering="AFTER"
+side="BOTH"
+[[dependencies.archwood_good]]
+modId="terrablender"
+type="optional"
+reason="Places the Dawning Forest biome in the overworld"
+versionRange="[4.0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.archwood_good]]
+modId = "cloth_config"
+type = "optional"
+reason = "In-game config screen for Giant Archwood Trees"
+versionRange = "*"
+ordering = "NONE"
+side = "CLIENT"

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "archwood_good:orange_archwood_planks"
+    },
+    "S": {
+      "item": "archwood_good:orange_archwood_slab"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "P P",
+    "PSP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "archwood_good:orange_archwood_barrel"
+  }
+}
