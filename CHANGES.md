@@ -3,6 +3,7 @@
 - Structure `archwood_good:ancient_archwood_tree`: a 73×80×73 braided landmark, 64 blocks from the soil line to the crown.
 - Seven trunks twist around each other: blue, red, purple, and green (Ars Nouveau), yellow (Ars Elemental), white and orange (Archwood Good).
 - Leaves stay with their log color. Huge humps and grooves on the trunk, three tiers of branches, buttress roots.
+- Orange and white leaves are placed `persistent=true` so they do not decay (they are MagicLeaves / LeavesBlock; the blockstate file just has no model variants).
 - Ars Nouveau magelights (`ars_nouveau:light_block`, level 15) sit in the grooves, along the branches, and under the crown, tinted to the nearest wood.
 - Extremely rare surface structure, only in `ars_nouveau:archwood_forest` (spacing 320, separation 200). Piece origin is 16 blocks below the heightmap so the roots bury.
 - Place by hand: `/function archwood_good:place_ancient_archwood_tree` or `/place template archwood_good:ancient_archwood_tree`.
