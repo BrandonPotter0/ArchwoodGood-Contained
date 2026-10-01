@@ -1,10 +1,10 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#archwood_good:has_structure/super_archwood",
+  "biomes": "#archwood_good:has_structure/ancient_archwood_tree",
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "beard_thin",
-  "start_pool": "archwood_good:super_archwood",
+  "start_pool": "archwood_good:ancient_archwood_tree",
   "size": 1,
   "start_height": {
     "absolute": -16

@@ -1,10 +1,11 @@
 
-## Super Archwood
-- Structure `archwood_good:super_archwood`: a 73×80×73 braided landmark, 64 blocks from the soil line to the crown.
+## Ancient Archwood Tree
+- Structure `archwood_good:ancient_archwood_tree`: a 73×80×73 braided landmark, 64 blocks from the soil line to the crown.
 - Seven trunks twist around each other: blue, red, purple, and green (Ars Nouveau), yellow (Ars Elemental), white and orange (Archwood Good).
 - Leaves stay with their log color. Huge humps and grooves on the trunk, three tiers of branches, buttress roots.
-- Rare surface structure in Archwood Forest, Dawning Forest, and Blinding Forest (spacing 96, separation 40). Piece origin is 16 blocks below the heightmap so the roots bury.
-- Place by hand: `/function archwood_good:place_super_archwood` or `/place template archwood_good:super_archwood`.
+- Ars Nouveau magelights (`ars_nouveau:light_block`, level 15) sit in the grooves, along the branches, and under the crown, tinted to the nearest wood.
+- Extremely rare surface structure, only in `ars_nouveau:archwood_forest` (spacing 320, separation 200). Piece origin is 16 blocks below the heightmap so the roots bury.
+- Place by hand: `/function archwood_good:place_ancient_archwood_tree` or `/place template archwood_good:ancient_archwood_tree`.
 
 # Archwood Good 1.21.1-1.0.3 — source changes
 
