@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "ars_nouveau:archwood_forest",
+    "archwood_good:dawning_forest",
+    "archwood_good:blinding_forest"
+  ]
+}
