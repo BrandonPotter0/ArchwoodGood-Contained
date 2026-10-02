@@ -1,3 +1,7 @@
+## 1.2.57
+- Removed the Archwood Good crafting table recipe.
+- Grindstone converts blue, red, green, purple, yellow, orange, and white archwood logs and wood into fading archwood. Log for log, wood for wood, stripped stays stripped. 2 experience.
+
 ## 1.2.56 grindstone
 - Removed the shaped recipe for `archwood_good:archwood_crafting_table`.
 - Grindstone converts blue, red, green, purple, yellow, orange, and white archwood logs into fading archwood logs, and the matching wood blocks into fading archwood wood. Stripped stays stripped. One slot filled, the other empty. 2 experience.
