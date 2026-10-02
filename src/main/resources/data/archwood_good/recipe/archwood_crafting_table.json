@@ -4,11 +4,15 @@
   "key": {
     "#": {
       "tag": "ars_nouveau:archwood_planks"
+    },
+    "A": {
+      "item": "minecraft:amethyst_shard"
     }
   },
   "pattern": [
-    "##",
-    "##"
+    "# #",
+    " A ",
+    "# #"
   ],
   "result": {
     "count": 1,
