@@ -1,3 +1,7 @@
+## 1.2.56 grindstone
+- Removed the shaped recipe for `archwood_good:archwood_crafting_table`.
+- Grindstone converts blue, red, green, purple, yellow, orange, and white archwood logs into fading archwood logs, and the matching wood blocks into fading archwood wood. Stripped stays stripped. One slot filled, the other empty. 2 experience.
+
 
 ## Ancient Archwood Tree
 - Structure `archwood_good:ancient_archwood_tree`: a 73×80×73 braided landmark, 64 blocks from the soil line to the crown.

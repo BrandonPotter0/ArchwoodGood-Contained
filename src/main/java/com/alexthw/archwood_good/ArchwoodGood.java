@@ -12,8 +12,10 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import com.alexthw.archwood_good.config.AWGConfig;
+import com.alexthw.archwood_good.misc.FadingGrindstone;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +46,8 @@ public class ArchwoodGood {
 
         AWGCreativeTabRegistry.TABS.register(eventBus);
         eventBus.addListener(ArchwoodGood::commonSetup);
+        NeoForge.EVENT_BUS.addListener(FadingGrindstone::onPlace);
+        NeoForge.EVENT_BUS.addListener(FadingGrindstone::onTake);
     }
 
     private static void commonSetup(final FMLCommonSetupEvent event) {
