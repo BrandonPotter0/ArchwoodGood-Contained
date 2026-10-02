@@ -1,0 +1,104 @@
+name: Inspect Ancient Archwood NBT
+on:
+  push:
+    branches: [temp-inspect-ancient-nbt]
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode and inspect NBT
+        run: |
+          python3 - <<'PY'
+          import gzip, struct, collections, json
+
+          p = "src/main/resources/data/archwood_good/structure/ancient_archwood_tree.nbt"
+          data = gzip.open(p, "rb").read()
+          i = 0
+
+          def read(fmt, n):
+              global i
+              s = struct.calcsize(fmt)
+              v = struct.unpack(fmt, data[i:i+s])[0]
+              i += s
+              return v
+
+          def u16():
+              return read(">H", 2)
+
+          def string():
+              n = u16()
+              global i
+              s = data[i:i+n].decode("utf-8")
+              i += n
+              return s
+
+          def payload(t):
+              global i
+              if t == 1: return read(">b",1)
+              if t == 2: return read(">h",2)
+              if t == 3: return read(">i",4)
+              if t == 4: return read(">q",8)
+              if t == 5: return read(">f",4)
+              if t == 6: return read(">d",8)
+              if t == 7:
+                  n=read(">i",4); v=data[i:i+n]; i+=n; return v
+              if t == 8: return string()
+              if t == 9:
+                  et=read(">b",1); n=read(">i",4); return [payload(et) for _ in range(n)]
+              if t == 10:
+                  d={}
+                  while True:
+                      et=read(">b",1)
+                      if et==0: return d
+                      name=string(); d[name]=payload(et)
+              if t == 11:
+                  n=read(">i",4); return [read(">i",4) for _ in range(n)]
+              if t == 12:
+                  n=read(">i",4); return [read(">q",8) for _ in range(n)]
+              raise ValueError(t)
+
+          root_type=read(">b",1)
+          root_name=string()
+          root=payload(root_type)
+
+          size=root["size"]
+          palette=root["palette"]
+          blocks=root["blocks"]
+          entities=root.get("entities", [])
+
+          def state(p):
+              n=p.get("Name","?")
+              props=p.get("Properties")
+              if props:
+                  return n + " " + json.dumps(props, sort_keys=True, separators=(",",":"))
+              return n
+
+          states=[state(x) for x in palette]
+          counts=collections.Counter()
+          for b in blocks:
+              counts[states[b["state"]]] += 1
+
+          solid=[b for b in blocks if states[b["state"]] not in ("minecraft:air","minecraft:cave_air","minecraft:void_air","minecraft:structure_void")]
+          xs=[b["pos"][0] for b in solid]; ys=[b["pos"][1] for b in solid]; zs=[b["pos"][2] for b in solid]
+
+          print("=== ANCIENT ARCHWOOD TREE NBT ===")
+          print("Compressed file bytes:", __import__("os").path.getsize(p))
+          print("Decompressed NBT bytes:", len(data))
+          print("Dimensions X Y Z:", size)
+          print("Palette entries:", len(palette))
+          print("Block entries:", len(blocks))
+          print("Entities:", len(entities))
+          print("Solid/non-void block entries:", len(solid))
+          print("Occupied bounds X:", min(xs), "to", max(xs))
+          print("Occupied bounds Y:", min(ys), "to", max(ys))
+          print("Occupied bounds Z:", min(zs), "to", max(zs))
+          print()
+          print("=== BLOCK COUNTS BY FULL STATE ===")
+          for k,v in counts.most_common():
+              print(f"{v:7d}  {k}")
+          print()
+          print("=== PALETTE ===")
+          for n,s in enumerate(states):
+              print(f"{n:4d}  {s}")
+          PY
