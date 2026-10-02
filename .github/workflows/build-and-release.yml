@@ -43,4 +43,5 @@ jobs:
           test -n "$JAR"
           gh release create "v$VERSION" "$JAR" \
             --title "Archwood Good $VERSION for Minecraft 1.21.1" \
-            --generate-notes
+            --generate-notes \
+            --prerelease
