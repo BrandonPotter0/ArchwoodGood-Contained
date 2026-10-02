@@ -27,6 +27,9 @@ public class ShouldApplyMixin implements IMixinConfigPlugin {
                 && mixinToApply.equals("com.alexthw.archwood_good.mixins.RuntimeDataGeneratorMixin")) {
             return isModLoaded.test("create");
         }
+        if (mixinToApply.equals("com.alexthw.archwood_good.mixins.GrindstoneArchwoodMixin")) {
+            return true;
+        }
         return false;
     }
 

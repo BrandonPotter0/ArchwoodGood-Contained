@@ -48,6 +48,13 @@ public final class FadingGrindstone {
         TO_FADING.put(ResourceLocation.fromNamespaceAndPath(namespace, "stripped_" + color + "_archwood_wood"), ResourceLocation.fromNamespaceAndPath("archwood_good", "stripped_archwood_wood"));
     }
 
+    public static boolean canGrind(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        return TO_FADING.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()));
+    }
+
     public static void onPlace(GrindstoneEvent.OnPlaceItem event) {
         convert(event.getTopItem(), event.getBottomItem()).ifPresent(output -> {
             event.setOutput(output);
