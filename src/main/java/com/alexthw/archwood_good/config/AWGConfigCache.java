@@ -15,7 +15,7 @@ import java.nio.file.Path;
 public final class AWGConfigCache {
     public static volatile boolean giantTrees = true;
     public static volatile boolean ancientArchwoodExclusion = true;
-    public static volatile int ancientArchwoodExclusionRadius = 10;
+    public static volatile int ancientArchwoodExclusionRadius = 5;
     private static volatile boolean logged;
 
     private AWGConfigCache() {}
@@ -44,7 +44,7 @@ public final class AWGConfigCache {
             giantTrees = readBoolean(AWGConfig.GIANT_ARCHWOOD_TREES, "giantArchwoodTrees", true);
             ancientArchwoodExclusion = readBoolean(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION, "ancientArchwoodExclusion", true);
             ancientArchwoodExclusionRadius = readInt(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS,
-                    "ancientArchwoodExclusionRadius", 16, 0, 256);
+                    "ancientArchwoodExclusionRadius", 5, 0, 256);
             logged = false;
         }
     }
@@ -55,7 +55,7 @@ public final class AWGConfigCache {
             giantTrees = readBoolean(AWGConfig.GIANT_ARCHWOOD_TREES, "giantArchwoodTrees", true);
             ancientArchwoodExclusion = readBoolean(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION, "ancientArchwoodExclusion", true);
             ancientArchwoodExclusionRadius = readInt(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS,
-                    "ancientArchwoodExclusionRadius", 10, 0, 256);
+                    "ancientArchwoodExclusionRadius", 5, 0, 256);
             logged = false;
             ArchwoodGood.LOGGER.info("Archwood Good worldgen config reloaded: giantTrees={}, ancientExclusion={}, radius={}",
                     giantTrees, ancientArchwoodExclusion, ancientArchwoodExclusionRadius);
