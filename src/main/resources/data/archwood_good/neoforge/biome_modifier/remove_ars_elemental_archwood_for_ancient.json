@@ -1,0 +1,12 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ars_elemental"
+    }
+  ],
+  "type": "neoforge:remove_features",
+  "biomes": "ars_nouveau:archwood_forest",
+  "features": "ars_elemental:common_flashing_archwood",
+  "steps": "vegetal_decoration"
+}
