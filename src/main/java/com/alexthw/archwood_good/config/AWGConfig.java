@@ -20,9 +20,9 @@ public class AWGConfig {
                 .translation("archwood_good.config.ancient_archwood_exclusion")
                 .define("ancientArchwoodExclusion", true);
         ANCIENT_ARCHWOOD_EXCLUSION_RADIUS = builder
-                .comment("Horizontal radius in blocks around an Ancient Archwood Tree where Archwood tree generation is prevented. Default is 32.")
+                .comment("Horizontal radius in blocks around an Ancient Archwood Tree where Archwood tree generation is prevented. Default is 16.")
                 .translation("archwood_good.config.ancient_archwood_exclusion_radius")
-                .defineInRange("ancientArchwoodExclusionRadius", 32, 0, 256);
+                .defineInRange("ancientArchwoodExclusionRadius", 16, 0, 256);
         builder.pop();
         SPEC = builder.build();
     }
