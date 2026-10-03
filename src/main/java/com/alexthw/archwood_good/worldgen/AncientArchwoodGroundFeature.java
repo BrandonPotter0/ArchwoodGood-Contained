@@ -34,6 +34,12 @@ public class AncientArchwoodGroundFeature extends Feature<NoneFeatureConfigurati
 
         BlockPos pos = context.origin();
 
+        // Only decorate the circular exclusion buffer, never the wider forest.
+        if (!AncientArchwoodExclusionPlacement.isWithinAncientExclusion(
+                region, pos, AWGConfigCache.ancientArchwoodExclusionRadius())) {
+            return false;
+        }
+
         // Never alter blocks belonging to the Ancient Archwood structure itself.
         if (AncientArchwoodExclusionPlacement.isInsideAncientStructure(region, pos)) {
             return false;
