@@ -45,7 +45,7 @@ public final class AWGClothScreen {
                  .setDefaultValue(10)
                 .setMin(0)
                 .setMax(256)
-                .setTooltip(Optional.of(new Component[]{Component.literal("Horizontal buffer in blocks around the Ancient Archwood footprint. Default is 10.")}))
+                .setTooltip(Optional.of(new Component[]{Component.literal("Horizontal buffer in blocks around the Ancient Archwood footprint. Default is 5.")}))
                 .setSaveConsumer(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS::set)
                 .build());
 
