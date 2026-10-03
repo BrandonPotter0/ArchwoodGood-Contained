@@ -20,9 +20,9 @@ public class AWGConfig {
                 .translation("archwood_good.config.ancient_archwood_exclusion")
                 .define("ancientArchwoodExclusion", true);
         ANCIENT_ARCHWOOD_EXCLUSION_RADIUS = builder
-                .comment("Horizontal buffer in blocks around an Ancient Archwood Tree. The exclusion boundary is circular. Default is 10.")
+                .comment("Horizontal buffer in blocks around an Ancient Archwood Tree. The exclusion boundary is circular. Default is 5.")
                 .translation("archwood_good.config.ancient_archwood_exclusion_radius")
-                .defineInRange("ancientArchwoodExclusionRadius", 10, 0, 256);
+                .defineInRange("ancientArchwoodExclusionRadius", 5, 0, 256);
         builder.pop();
         SPEC = builder.build();
     }
