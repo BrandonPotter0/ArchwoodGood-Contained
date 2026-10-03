@@ -22,7 +22,7 @@ public final class AWGClothScreen {
 
         boolean giantTrees = true;
         boolean exclusion = true;
-        int radius = 32;
+        int radius = 16;
         try {
             giantTrees = AWGConfig.GIANT_ARCHWOOD_TREES.get();
             exclusion = AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION.get();
@@ -42,10 +42,10 @@ public final class AWGClothScreen {
                 .build());
 
         worldgen.addEntry(entry.startIntField(Component.literal("Ancient Archwood Exclusion Radius"), radius)
-                .setDefaultValue(32)
+                 .setDefaultValue(16)
                 .setMin(0)
                 .setMax(256)
-                .setTooltip(Optional.of(new Component[]{Component.literal("Horizontal radius in blocks. Default is 32.")}))
+                .setTooltip(Optional.of(new Component[]{Component.literal("Horizontal radius in blocks. Default is 16.")}))
                 .setSaveConsumer(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS::set)
                 .build());
 
