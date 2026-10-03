@@ -30,14 +30,10 @@ public final class AWGConfigCache {
     }
 
     public static boolean ancientArchwoodExclusionEnabled() {
-        ancientArchwoodExclusion = readBoolean(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION, "ancientArchwoodExclusion", true);
-        ancientArchwoodExclusionRadius = readInt(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS,
-                "ancientArchwoodExclusionRadius", 32, 0, 256);
         return ancientArchwoodExclusion;
     }
 
     public static int ancientArchwoodExclusionRadius() {
-        ancientArchwoodExclusionEnabled();
         return ancientArchwoodExclusionRadius;
     }
 
