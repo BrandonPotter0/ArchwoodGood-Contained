@@ -38,10 +38,19 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
         int radius = AWGConfigCache.ancientArchwoodExclusionRadius();
         if (radius <= 0 || !(context.getLevel() instanceof WorldGenRegion region)) return true;
 
+        return isWithinAncientExclusion(region, pos, radius);
+    }
+
+    /**
+     * Checks whether a position is inside the circular exclusion area surrounding
+     * an Ancient Archwood Tree. The configured radius is the width of the buffer
+     * outside the structure's footprint, not the diameter of the entire tree.
+     */
+    public static boolean isWithinAncientExclusion(WorldGenRegion region, BlockPos pos, int radius) {
         Structure ancient = region.registryAccess()
                 .registryOrThrow(Registries.STRUCTURE)
                 .get(ANCIENT_ARCHWOOD.location());
-        if (ancient == null) return true;
+        if (ancient == null) return false;
 
         ChunkPos center = new ChunkPos(pos);
         int search = Math.max(1, (radius + 80 + 15) >> 4);
@@ -49,9 +58,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
         /*
          * WorldGenRegion only exposes the bounded set of chunks currently available
          * to this world-generation pass. Do not use StructureManager.startsForStructure
-         * here: that method asks the LevelReader for the requested chunk, which can
-         * escape the current WorldGenRegion and crash with "Requested chunk unavailable
-         * during world generation".
+         * here: that method can request chunks outside the current generation region.
          *
          * Read structure starts directly from already-available ChunkAccess instances.
          * If a candidate chunk is outside the current generation region, skip it rather
@@ -69,13 +76,61 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
                 StructureStart start = chunk.getStartForStructure(ancient);
                 if (start == null || !start.isValid()) continue;
 
-                BoundingBox protectedArea = start.getBoundingBox().inflatedBy(radius, 0, radius);
-                if (protectedArea.intersects(pos.getX(), pos.getZ(), pos.getX(), pos.getZ())) {
-                    return false;
+                BoundingBox box = start.getBoundingBox();
+
+                // Never allow normal trees to generate inside the Ancient Archwood itself.
+                if (box.isInside(pos)) {
+                    return true;
+                }
+
+                // Build a true circle around the structure. The configured radius is
+                // added to the structure's half-width, giving a 10-block outer buffer
+                // with a rounded/circular boundary rather than a square bounding box.
+                double centerX = (box.minX() + box.maxX()) * 0.5;
+                double centerZ = (box.minZ() + box.maxZ()) * 0.5;
+                double baseRadius = Math.max(box.getXSpan(), box.getZSpan()) * 0.5;
+                double exclusionRadius = baseRadius + radius;
+
+                double dx = (pos.getX() + 0.5) - centerX;
+                double dz = (pos.getZ() + 0.5) - centerZ;
+                if (dx * dx + dz * dz <= exclusionRadius * exclusionRadius) {
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
+    }
+
+    /**
+     * Used by the Ancient Archwood ground-dressing feature so it never replaces
+     * grass that belongs to the Ancient Archwood structure itself.
+     */
+    public static boolean isInsideAncientStructure(WorldGenRegion region, BlockPos pos) {
+        Structure ancient = region.registryAccess()
+                .registryOrThrow(Registries.STRUCTURE)
+                .get(ANCIENT_ARCHWOOD.location());
+        if (ancient == null) return false;
+
+        ChunkPos center = new ChunkPos(pos);
+        int search = Math.max(1, (80 + 15) >> 4);
+
+        for (int cx = center.x - search; cx <= center.x + search; cx++) {
+            for (int cz = center.z - search; cz <= center.z + search; cz++) {
+                ChunkAccess chunk;
+                try {
+                    chunk = region.getChunk(cx, cz);
+                } catch (IllegalStateException ignored) {
+                    continue;
+                }
+
+                StructureStart start = chunk.getStartForStructure(ancient);
+                if (start != null && start.isValid() && start.getBoundingBox().isInside(pos)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
