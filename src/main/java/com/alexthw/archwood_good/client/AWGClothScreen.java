@@ -42,7 +42,7 @@ public final class AWGClothScreen {
                 .build());
 
         worldgen.addEntry(entry.startIntField(Component.literal("Ancient Archwood Exclusion Radius"), radius)
-                 .setDefaultValue(16)
+                 .setDefaultValue(10)
                 .setMin(0)
                 .setMax(256)
                 .setTooltip(Optional.of(new Component[]{Component.literal("Horizontal radius in blocks. Default is 16.")}))
