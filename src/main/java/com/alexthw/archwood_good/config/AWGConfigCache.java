@@ -55,7 +55,7 @@ public final class AWGConfigCache {
             giantTrees = readBoolean(AWGConfig.GIANT_ARCHWOOD_TREES, "giantArchwoodTrees", true);
             ancientArchwoodExclusion = readBoolean(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION, "ancientArchwoodExclusion", true);
             ancientArchwoodExclusionRadius = readInt(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS,
-                    "ancientArchwoodExclusionRadius", 32, 0, 256);
+                    "ancientArchwoodExclusionRadius", 10, 0, 256);
             logged = false;
             ArchwoodGood.LOGGER.info("Archwood Good worldgen config reloaded: giantTrees={}, ancientExclusion={}, radius={}",
                     giantTrees, ancientArchwoodExclusion, ancientArchwoodExclusionRadius);
