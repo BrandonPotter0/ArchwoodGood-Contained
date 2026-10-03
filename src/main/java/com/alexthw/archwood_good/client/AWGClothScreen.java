@@ -19,17 +19,36 @@ public final class AWGClothScreen {
                 .setSavingRunnable(AWGConfig.SPEC::save);
         ConfigEntryBuilder entry = builder.entryBuilder();
         ConfigCategory worldgen = builder.getOrCreateCategory(Component.literal("World Generation"));
-        boolean current = true;
+
+        boolean giantTrees = true;
+        boolean exclusion = true;
+        int radius = 10;
         try {
-            current = AWGConfig.GIANT_ARCHWOOD_TREES.get();
-        } catch (Throwable ignored) {
-            current = true;
-        }
-        worldgen.addEntry(entry.startBooleanToggle(Component.literal("Giant Archwood Trees"), current)
+            giantTrees = AWGConfig.GIANT_ARCHWOOD_TREES.get();
+            exclusion = AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION.get();
+            radius = AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS.get();
+        } catch (Throwable ignored) {}
+
+        worldgen.addEntry(entry.startBooleanToggle(Component.literal("Giant Archwood Trees"), giantTrees)
                 .setDefaultValue(true)
                 .setTooltip(Optional.of(new Component[]{Component.literal("Enable Giant Trees in Archwood Forests. Default is on.")}))
                 .setSaveConsumer(AWGConfig.GIANT_ARCHWOOD_TREES::set)
                 .build());
+
+        worldgen.addEntry(entry.startBooleanToggle(Component.literal("Ancient Archwood Exclusion"), exclusion)
+                .setDefaultValue(true)
+                .setTooltip(Optional.of(new Component[]{Component.literal("Prevent Archwood trees from generating within the configured radius of an Ancient Archwood Tree.")}))
+                .setSaveConsumer(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION::set)
+                .build());
+
+        worldgen.addEntry(entry.startIntField(Component.literal("Ancient Archwood Exclusion Radius"), radius)
+                 .setDefaultValue(10)
+                .setMin(0)
+                .setMax(256)
+                .setTooltip(Optional.of(new Component[]{Component.literal("Horizontal buffer in blocks around the Ancient Archwood footprint. Default is 5.")}))
+                .setSaveConsumer(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS::set)
+                .build());
+
         return builder.build();
     }
 }

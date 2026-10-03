@@ -1,9 +1,10 @@
 {
   "feature": "archwood_good:giant_forest_tree",
   "placement": [
-    { "type": "minecraft:rarity_filter", "chance": 6 },
-    { "type": "minecraft:in_square" },
-    { "type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG" },
-    { "type": "minecraft:biome" }
+    {"type": "minecraft:rarity_filter", "chance": 6},
+    {"type": "minecraft:in_square"},
+    {"type": "minecraft:heightmap", "heightmap": "WORLD_SURFACE_WG"},
+    {"type": "minecraft:biome"},
+    {"type": "archwood_good:ancient_archwood_exclusion"}
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ars_elemental"
+    }
+  ],
+  "type": "neoforge:add_features",
+  "biomes": "ars_nouveau:archwood_forest",
+  "features": "archwood_good:placed_ancient_exclusion_ars_elemental_archwood",
+  "step": "vegetal_decoration"
+}
