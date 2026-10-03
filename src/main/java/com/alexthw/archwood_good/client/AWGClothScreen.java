@@ -22,7 +22,7 @@ public final class AWGClothScreen {
 
         boolean giantTrees = true;
         boolean exclusion = true;
-        int radius = 16;
+        int radius = 10;
         try {
             giantTrees = AWGConfig.GIANT_ARCHWOOD_TREES.get();
             exclusion = AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION.get();
