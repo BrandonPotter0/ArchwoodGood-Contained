@@ -47,7 +47,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
                         new ChunkPos(cx, cz), structure -> structure == ancient)) {
                     if (!start.isValid()) continue;
                     BoundingBox protectedArea = start.getBoundingBox().inflatedBy(radius, 0, radius);
-                    if (protectedArea.isInside(pos.getX(), pos.getY(), pos.getZ())) return false;
+                    if (protectedArea.intersects(pos.getX(), pos.getZ(), pos.getX(), pos.getZ())) return false;
                 }
             }
         }
