@@ -38,7 +38,9 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
         int radius = AWGConfigCache.ancientArchwoodExclusionRadius();
         if (radius <= 0 || !(context.getLevel() instanceof WorldGenRegion region)) return true;
 
-        return isWithinAncientExclusion(region, pos, radius);
+        // This placement modifier is an exclusion filter: allow generation only
+        // when the candidate position is OUTSIDE the Ancient Archwood exclusion zone.
+        return !isWithinAncientExclusion(region, pos, radius);
     }
 
     /**
@@ -78,14 +80,13 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
 
                 BoundingBox box = start.getBoundingBox();
 
-                // Never allow normal trees to generate inside the Ancient Archwood itself.
                 if (box.isInside(pos)) {
                     return true;
                 }
 
                 // Build a true circle around the structure. The configured radius is
-                // added to the structure's half-width, giving a 10-block outer buffer
-                // with a rounded/circular boundary rather than a square bounding box.
+                // added to the structure's half-width, giving a rounded outer buffer
+                // rather than a square biome-wide exclusion.
                 double centerX = (box.minX() + box.maxX()) * 0.5;
                 double centerZ = (box.minZ() + box.maxZ()) * 0.5;
                 double baseRadius = Math.max(box.getXSpan(), box.getZSpan()) * 0.5;
