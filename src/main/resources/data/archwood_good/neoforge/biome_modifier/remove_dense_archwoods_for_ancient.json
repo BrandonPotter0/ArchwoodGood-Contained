@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "ars_nouveau:archwood_forest",
+  "features": "ars_nouveau:placed_dense_archwoods",
+  "steps": "vegetal_decoration"
+}
