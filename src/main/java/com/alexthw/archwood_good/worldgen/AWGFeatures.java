@@ -32,6 +32,9 @@ public class AWGFeatures {
     public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<AncientArchwoodExclusionPlacement>> ANCIENT_ARCHWOOD_EXCLUSION =
             PLACEMENT_MODIFIERS.register("ancient_archwood_exclusion",
                     () -> () -> AncientArchwoodExclusionPlacement.CODEC);
+    public static final DeferredHolder<Feature<?>, AncientArchwoodGroundFeature> ANCIENT_ARCHWOOD_GROUND =
+            FEATURES.register("ancient_archwood_ground",
+                    () -> new AncientArchwoodGroundFeature(NoneFeatureConfiguration.CODEC));
 
     public static void register(IEventBus bus) {
         FEATURES.register(bus);
