@@ -11,6 +11,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
+import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -26,6 +27,11 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
     private AncientArchwoodExclusionPlacement() {}
 
     @Override
+    public PlacementModifierType<?> type() {
+        return AWGFeatures.ANCIENT_ARCHWOOD_EXCLUSION.get();
+    }
+
+    @Override
     protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
         if (!AWGConfigCache.ancientArchwoodExclusionEnabled()) return true;
 
@@ -34,7 +40,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
 
         Structure ancient = region.registryAccess()
                 .registryOrThrow(Registries.STRUCTURE)
-                .getValue(ANCIENT_ARCHWOOD.location());
+                .get(ANCIENT_ARCHWOOD.location());
         if (ancient == null) return true;
 
         StructureManager manager = region.getLevel().structureManager().forWorldGenRegion(region);
