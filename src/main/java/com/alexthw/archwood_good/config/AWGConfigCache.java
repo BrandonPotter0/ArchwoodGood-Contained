@@ -15,7 +15,7 @@ import java.nio.file.Path;
 public final class AWGConfigCache {
     public static volatile boolean giantTrees = true;
     public static volatile boolean ancientArchwoodExclusion = true;
-    public static volatile int ancientArchwoodExclusionRadius = 32;
+    public static volatile int ancientArchwoodExclusionRadius = 16;
     private static volatile boolean logged;
 
     private AWGConfigCache() {}
@@ -44,7 +44,7 @@ public final class AWGConfigCache {
             giantTrees = readBoolean(AWGConfig.GIANT_ARCHWOOD_TREES, "giantArchwoodTrees", true);
             ancientArchwoodExclusion = readBoolean(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION, "ancientArchwoodExclusion", true);
             ancientArchwoodExclusionRadius = readInt(AWGConfig.ANCIENT_ARCHWOOD_EXCLUSION_RADIUS,
-                    "ancientArchwoodExclusionRadius", 32, 0, 256);
+                    "ancientArchwoodExclusionRadius", 16, 0, 256);
             logged = false;
         }
     }
