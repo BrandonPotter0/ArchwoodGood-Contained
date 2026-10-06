@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.WeakHashMap;
 
 public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
@@ -35,7 +36,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
      * Placement modifiers can be evaluated many times while a WorldGenRegion is
      * being processed. The old implementation rescanned up to a 13x13 chunk area
      * for every single candidate position. Cache only the small set of Ancient
-     * Archwood bounding boxes for the current WorldGenRegion instead.
+     * Archwood bounding boxes for each candidate chunk in the current WorldGenRegion instead.
      *
      * Weak keys are intentional: a generation region can be discarded after the
      * chunk-generation pass, so the cache must not keep old regions alive.
@@ -142,9 +143,9 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
         }
 
         List<BoundingBox> result = List.copyOf(boxes);
-        byRadius = REGION_STRUCTURE_CACHE.computeIfAbsent(region, ignored -> new HashMap<>());
+        byRadius = REGION_STRUCTURE_CACHE.computeIfAbsent(region, ignored -> new ConcurrentHashMap<>());
         Map<Long, List<BoundingBox>> byChunk =
-                byRadius.computeIfAbsent(radius, ignored -> new HashMap<>());
+                byRadius.computeIfAbsent(radius, ignored -> new ConcurrentHashMap<>());
         byChunk.put(chunkKey, result);
         return result;
     }
@@ -172,7 +173,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
      * grass that belongs to the Ancient Archwood structure itself.
      */
     public static boolean isInsideAncientStructure(WorldGenRegion region, BlockPos pos) {
-        for (BoundingBox box : getAncientArchwoodBoxes(region, pos, 0)) {
+        for (BoundingBox box : getAncientArchwoodBoxes(region, pos, AWGConfigCache.ancientArchwoodExclusionRadius())) {
             if (box.isInside(pos)) {
                 return true;
             }
