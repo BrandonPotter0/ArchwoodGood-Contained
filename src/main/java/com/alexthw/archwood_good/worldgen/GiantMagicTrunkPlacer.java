@@ -31,6 +31,16 @@ import java.util.function.BiConsumer;
 public class GiantMagicTrunkPlacer extends TrunkPlacer {
     public final boolean isWorldGen;
     public final ResourceLocation podID;
+    private final net.minecraft.world.level.block.Block podBlock;
+
+    private static final Direction[] ROOT_NORTH_WEST = {Direction.NORTH, Direction.WEST};
+    private static final Direction[] ROOT_SOUTH_WEST = {Direction.SOUTH, Direction.WEST};
+    private static final Direction[] ROOT_EAST_SOUTH = {Direction.EAST, Direction.SOUTH};
+    private static final Direction[] ROOT_EAST_NORTH = {Direction.EAST, Direction.NORTH};
+    private static final Direction[] POD_NORTH_WEST = {Direction.NORTH, Direction.WEST};
+    private static final Direction[] POD_NORTH_EAST = {Direction.NORTH, Direction.EAST};
+    private static final Direction[] POD_SOUTH_WEST = {Direction.SOUTH, Direction.WEST};
+    private static final Direction[] POD_SOUTH_EAST = {Direction.SOUTH, Direction.EAST};
 
     public static final MapCodec<GiantMagicTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(
@@ -46,6 +56,7 @@ public class GiantMagicTrunkPlacer extends TrunkPlacer {
         this.isWorldGen = isWorldGen;
         ResourceLocation parsed = ResourceLocation.tryParse(podName);
         this.podID = parsed == null ? ResourceLocation.parse("minecraft:air") : parsed;
+        this.podBlock = BuiltInRegistries.BLOCK.get(this.podID);
     }
 
     @Override
@@ -116,11 +127,11 @@ public class GiantMagicTrunkPlacer extends TrunkPlacer {
             }
 
             if (i == 0) {
-                addRoots(world, rand, pos.west(), consumer, config, new Direction[]{Direction.NORTH, Direction.WEST});
-                addRoots(world, rand, pos.south(3), consumer, config, new Direction[]{Direction.SOUTH, Direction.WEST});
+                addRoots(world, rand, pos.west(), consumer, config, ROOT_NORTH_WEST);
+                addRoots(world, rand, pos.south(3), consumer, config, ROOT_SOUTH_WEST);
                 addRoots(world, rand, pos.south().west(), consumer, config, new Direction[]{Direction.WEST});
-                addRoots(world, rand, pos.south(3).east(2), consumer, config, new Direction[]{Direction.EAST, Direction.SOUTH});
-                addRoots(world, rand, pos.east(3), consumer, config, new Direction[]{Direction.EAST, Direction.NORTH});
+                addRoots(world, rand, pos.south(3).east(2), consumer, config, ROOT_EAST_SOUTH);
+                addRoots(world, rand, pos.east(3), consumer, config, ROOT_EAST_NORTH);
                 addRoots(world, rand, pos.east(3).south(), consumer, config, new Direction[]{Direction.EAST});
                 addRoots(world, rand, pos.east().north(), consumer, config, new Direction[]{Direction.NORTH});
                 addRoots(world, rand, pos.north(), consumer, config, new Direction[]{Direction.NORTH, Direction.EAST});
@@ -152,10 +163,10 @@ public class GiantMagicTrunkPlacer extends TrunkPlacer {
             }
 
             if (isWorldGen && i >= 2 && i < foliageHeight - 2) {
-                addPod(world, layer, rand, consumer, new Direction[]{Direction.NORTH, Direction.WEST});
-                addPod(world, layer.east(2), rand, consumer, new Direction[]{Direction.NORTH, Direction.EAST});
-                addPod(world, layer.south(2), rand, consumer, new Direction[]{Direction.SOUTH, Direction.WEST});
-                addPod(world, layer.south(2).east(2), rand, consumer, new Direction[]{Direction.SOUTH, Direction.EAST});
+                addPod(world, layer, rand, consumer, POD_NORTH_WEST);
+                addPod(world, layer.east(2), rand, consumer, POD_NORTH_EAST);
+                addPod(world, layer.south(2), rand, consumer, POD_SOUTH_WEST);
+                addPod(world, layer.south(2).east(2), rand, consumer, POD_SOUTH_EAST);
             }
         }
 
@@ -241,7 +252,7 @@ public class GiantMagicTrunkPlacer extends TrunkPlacer {
         Direction d = validDirs[random.nextInt(validDirs.length)];
         int age = random.nextIntBetweenInclusive(0, 2);
         if (!world.isStateAtPosition(pos.relative(d), BlockBehaviour.BlockStateBase::isAir)) return;
-        BlockState pod = BuiltInRegistries.BLOCK.get(podID).defaultBlockState();
+        BlockState pod = podBlock.defaultBlockState();
         if (pod.isAir()) return;
         if (pod.hasProperty(HorizontalDirectionalBlock.FACING)) pod = pod.setValue(HorizontalDirectionalBlock.FACING, d.getOpposite());
         if (pod.hasProperty(SconceBlock.LIGHT_LEVEL)) pod = pod.setValue(SconceBlock.LIGHT_LEVEL, 6 + age);
