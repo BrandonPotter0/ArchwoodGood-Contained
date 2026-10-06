@@ -16,7 +16,10 @@ import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 
 import java.util.Map;
 
-/** Makes Ars Nouveau colored saplings grow giant trees from a 2x2 like Dark Oak. */
+/**
+ * Makes all Archwood saplings grow giant trees from a 2x2 arrangement,
+ * while single saplings continue to use their normal tree feature.
+ */
 @EventBusSubscriber(modid = ArchwoodGood.MODID)
 public class GiantArchwoodEvents {
 
@@ -25,7 +28,9 @@ public class GiantArchwoodEvents {
             ResourceLocation.parse("ars_nouveau:red_archwood_sapling"), AWGConfiguredFeatures.GIANT_RED_TREE_KEY,
             ResourceLocation.parse("ars_nouveau:green_archwood_sapling"), AWGConfiguredFeatures.GIANT_GREEN_TREE_KEY,
             ResourceLocation.parse("ars_nouveau:purple_archwood_sapling"), AWGConfiguredFeatures.GIANT_PURPLE_TREE_KEY,
-            ResourceLocation.parse("ars_elemental:yellow_archwood_sapling"), AWGConfiguredFeatures.GIANT_YELLOW_TREE_KEY
+            ResourceLocation.parse("ars_elemental:yellow_archwood_sapling"), AWGConfiguredFeatures.GIANT_YELLOW_TREE_KEY,
+            ResourceLocation.parse("archwood_good:orange_archwood_sapling"), AWGConfiguredFeatures.GIANT_ORANGE_TREE_KEY,
+            ResourceLocation.parse("archwood_good:white_archwood_sapling"), AWGConfiguredFeatures.GIANT_WHITE_TREE_KEY
     );
 
     @SubscribeEvent
