@@ -10,6 +10,7 @@ public class AWGPlacedFeatures {
     public static final ResourceKey<PlacedFeature> PLACED_ORANGE_TREE_KEY = register("placed_orange_archwood_tree");
     public static final ResourceKey<PlacedFeature> PLACED_WHITE_TREE_KEY = register("placed_white_archwood_tree");
     public static final ResourceKey<PlacedFeature> PLACED_ORANGE_WHITE_KEY = register("placed_orange_white_archwoods");
+    public static final ResourceKey<PlacedFeature> PLACED_RARE_ORANGE_WHITE_KEY = register("placed_rare_orange_white_archwoods");
 
     /** Kept for compatibility with AWGBiomeModifier. */
     public static final ResourceKey<PlacedFeature> COMMON_ORANGE_PLACED_KEY = PLACED_ORANGE_WHITE_KEY;
