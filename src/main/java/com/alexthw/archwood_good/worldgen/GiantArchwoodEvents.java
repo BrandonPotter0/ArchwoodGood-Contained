@@ -3,7 +3,6 @@ package com.alexthw.archwood_good.worldgen;
 import com.alexthw.archwood_good.ArchwoodGood;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
@@ -33,6 +32,8 @@ public class GiantArchwoodEvents {
         LevelAccessor level = event.getLevel();
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
+        if (event.getFeature() == null) return;
+
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         ResourceKey<ConfiguredFeature<?, ?>> giant = GIANTS.get(id);
         if (giant == null) return;
@@ -40,14 +41,13 @@ public class GiantArchwoodEvents {
         BlockPos origin = findTwoByTwoOrigin(level, pos, state.getBlock());
         if (origin == null) return;
 
-        // Treat the four saplings as one growth operation and consume the
-        // complete cluster before the Giant Archwood feature is placed.
-        consumeTwoByTwo(level, origin, state.getBlock());
+        // Resolve the replacement first so a missing configured feature never
+        // consumes the sapling cluster. NeoForge resolves the key for us.
+        event.setFeature(giant);
+        if (event.getFeature() == null) return;
 
-        level.registryAccess()
-                .lookupOrThrow(Registries.CONFIGURED_FEATURE)
-                .get(giant)
-                .ifPresent(event::setFeature);
+        // Treat the four saplings as one growth operation.
+        consumeTwoByTwo(level, origin, state.getBlock());
     }
 
     private static void consumeTwoByTwo(LevelAccessor level, BlockPos origin, Block sapling) {
