@@ -99,15 +99,7 @@ public class AWGBiomes {
                 .temperature(0.9f)
                 .generationSettings(biomeBuilder.build())
                 .mobSpawnSettings(spawnBuilder.build())
-                .specialEffects((new BiomeSpecialEffects.Builder())
-                        .waterColor(7978751)
-                        .waterFogColor(329011)
-                        .skyColor(7978751)
-                        .grassColorOverride(13269556)
-                        .foliageColorOverride(12679744)
-                        .fogColor(12638463)
-                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                        .backgroundMusic(Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)).build())
+                .specialEffects(archwoodSpecialEffects(7978751, 329011, 7978751, 13269556, 12679744, 12638463, Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)))
                 .build();
     }
 
@@ -124,15 +116,7 @@ public class AWGBiomes {
                 .temperature(0.9f)
                 .generationSettings(biomeBuilder.build())
                 .mobSpawnSettings(spawnBuilder.build())
-                .specialEffects((new BiomeSpecialEffects.Builder())
-                        .waterColor(7978751)
-                        .waterFogColor(329011)
-                        .skyColor(7978751)
-                        .grassColorOverride(13269556)
-                        .foliageColorOverride(12679744)
-                        .fogColor(12638463)
-                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                        .backgroundMusic(Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)).build())
+                .specialEffects(archwoodSpecialEffects(7978751, 329011, 7978751, 13269556, 12679744, 12638463, Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)))
                 .build();
 
     }
@@ -172,15 +156,7 @@ public class AWGBiomes {
                 .temperature(0.7f)
                 .generationSettings(biomeBuilder.build())
                 .mobSpawnSettings(spawnBuilder.build())
-                .specialEffects((new BiomeSpecialEffects.Builder())
-                        .waterColor(7978751)
-                        .waterFogColor(329011)
-                        .skyColor(7978751)
-                        .grassColorOverride(1149867)
-                        .foliageColorOverride(2210437)
-                        .fogColor(12638463)
-                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                        .backgroundMusic(Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)).build())
+                .specialEffects(archwoodSpecialEffects(7978751, 329011, 7978751, 1149867, 2210437, 12638463, Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)))
                 .build();
     }
 
@@ -218,15 +194,7 @@ public class AWGBiomes {
                 .temperature(0.7f)
                 .generationSettings(biomeBuilder.build())
                 .mobSpawnSettings(spawnBuilder.build())
-                .specialEffects((new BiomeSpecialEffects.Builder())
-                        .waterColor(7978751)
-                        .waterFogColor(329011)
-                        .skyColor(7978751)
-                        .grassColorOverride(1346066)
-                        .foliageColorOverride(30464)
-                        .fogColor(12638463)
-                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                        .backgroundMusic(Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)).build())
+                .specialEffects(archwoodSpecialEffects(7978751, 329011, 7978751, 1346066, 30464, 12638463, Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)))
                 .build();
     }
 
@@ -244,15 +212,22 @@ public class AWGBiomes {
                 .temperature(0.4f)
                 .generationSettings(biomeBuilder.build())
                 .mobSpawnSettings(spawnBuilder.build())
-                .specialEffects((new BiomeSpecialEffects.Builder())
-                        .waterColor(7978751)
-                        .waterFogColor(329011)
-                        .skyColor(7978751)
-                        .grassColorOverride(13414701)
-                        .foliageColorOverride(13084948)
-                        .fogColor(12638463)
-                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                        .backgroundMusic(Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)).build())
+                .specialEffects(archwoodSpecialEffects(7978751, 329011, 7978751, 13414701, 13084948, 12638463, Musics.createGameMusic(SoundRegistry.ARIA_BIBLIO)))
+                .build();
+    }
+
+    private static BiomeSpecialEffects archwoodSpecialEffects(int waterColor, int waterFogColor, int skyColor,
+                                                                    int grassColor, int foliageColor, int fogColor,
+                                                                    net.minecraft.sounds.Music backgroundMusic) {
+        return new BiomeSpecialEffects.Builder()
+                .waterColor(waterColor)
+                .waterFogColor(waterFogColor)
+                .skyColor(skyColor)
+                .grassColorOverride(grassColor)
+                .foliageColorOverride(foliageColor)
+                .fogColor(fogColor)
+                .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
+                .backgroundMusic(backgroundMusic)
                 .build();
     }
 
@@ -352,15 +327,7 @@ public class AWGBiomes {
                 .temperature(0.5f)
                 .generationSettings(biomeBuilder.build())
                 .mobSpawnSettings(spawnBuilder.build())
-                .specialEffects((new BiomeSpecialEffects.Builder())
-                        .waterColor(12080623)
-                        .waterFogColor(11832560)
-                        .skyColor(10979583)
-                        .grassColorOverride(6566546)
-                        .foliageColorOverride(8535186)
-                        .fogColor(14386175)
-                        .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                        .backgroundMusic(Musics.createGameMusic(SoundRegistry.WILD_HUNT)).build())
+                .specialEffects(archwoodSpecialEffects(12080623, 11832560, 10979583, 6566546, 8535186, 14386175, Musics.createGameMusic(SoundRegistry.WILD_HUNT)))
                 .build();
     }
 
