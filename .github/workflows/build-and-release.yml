@@ -34,13 +34,17 @@ jobs:
         shell: bash
         run: echo "version=$(grep '^mod_version=' gradle.properties | cut -d= -f2)" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub release
+      - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           JAR=$(find build/libs -maxdepth 1 -type f -name 'archwood_good-*.jar' ! -name '*-sources.jar' | head -n 1)
           test -n "$JAR"
-          gh release create "v$VERSION" "$JAR" \
-            --title "Archwood Good $VERSION for Minecraft 1.21.1" \
-            --generate-notes
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            gh release upload "v$VERSION" "$JAR" --clobber
+          else
+            gh release create "v$VERSION" "$JAR" \
+              --title "Archwood Good $VERSION for Minecraft 1.21.1" \
+              --generate-notes
+          fi
