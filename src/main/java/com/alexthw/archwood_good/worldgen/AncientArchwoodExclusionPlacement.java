@@ -18,6 +18,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -41,7 +42,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
      * The cached value contains only immutable BoundingBox instances and therefore
      * does not retain chunks, levels, or other world objects.
      */
-    private static final Map<WorldGenRegion, List<BoundingBox>> REGION_STRUCTURE_CACHE =
+    private static final Map<WorldGenRegion, Map<Integer, Map<Long, List<BoundingBox>>>> REGION_STRUCTURE_CACHE =
             Collections.synchronizedMap(new WeakHashMap<>());
 
     private AncientArchwoodExclusionPlacement() {}
@@ -71,7 +72,7 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
      * footprint, not the diameter of the entire tree.
      */
     public static boolean isWithinAncientExclusion(WorldGenRegion region, BlockPos pos, int radius) {
-        for (BoundingBox box : getAncientArchwoodBoxes(region, radius)) {
+        for (BoundingBox box : getAncientArchwoodBoxes(region, pos, radius)) {
             if (isInsideCircularExclusion(box, pos, radius)) {
                 return true;
             }
@@ -85,26 +86,33 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
      * region. This expensive chunk scan is performed once per WorldGenRegion instead
      * of once per tree-placement candidate.
      */
-    private static List<BoundingBox> getAncientArchwoodBoxes(WorldGenRegion region, int radius) {
-        List<BoundingBox> cached = REGION_STRUCTURE_CACHE.get(region);
-        if (cached != null) {
-            return cached;
+    private static List<BoundingBox> getAncientArchwoodBoxes(
+            WorldGenRegion region, BlockPos pos, int radius) {
+
+        long chunkKey = new ChunkPos(pos).toLong();
+        Map<Integer, Map<Long, List<BoundingBox>>> byRadius = REGION_STRUCTURE_CACHE.get(region);
+        if (byRadius != null) {
+            Map<Long, List<BoundingBox>> byChunk = byRadius.get(radius);
+            if (byChunk != null) {
+                List<BoundingBox> cached = byChunk.get(chunkKey);
+                if (cached != null) {
+                    return cached;
+                }
+            }
         }
 
         Structure ancient = region.registryAccess()
                 .registryOrThrow(Registries.STRUCTURE)
                 .get(ANCIENT_ARCHWOOD.location());
         if (ancient == null) {
-            List<BoundingBox> empty = List.of();
-            REGION_STRUCTURE_CACHE.put(region, empty);
-            return empty;
+            return List.of();
         }
 
         // max_distance_from_center for the Ancient Archwood jigsaw structure is 80.
         // Use that bound plus the configured exclusion buffer to find every structure
-        // start that could possibly affect a candidate position in this region.
+        // start that could possibly affect this candidate chunk.
         int search = Math.max(1, (radius + 80 + 15) >> 4);
-        ChunkPos center = new ChunkPos(region.getCenter());
+        ChunkPos center = new ChunkPos(pos);
 
         List<BoundingBox> boxes = new ArrayList<>();
 
@@ -134,7 +142,10 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
         }
 
         List<BoundingBox> result = List.copyOf(boxes);
-        REGION_STRUCTURE_CACHE.put(region, result);
+        byRadius = REGION_STRUCTURE_CACHE.computeIfAbsent(region, ignored -> new HashMap<>());
+        Map<Long, List<BoundingBox>> byChunk =
+                byRadius.computeIfAbsent(radius, ignored -> new HashMap<>());
+        byChunk.put(chunkKey, result);
         return result;
     }
 
@@ -161,27 +172,9 @@ public final class AncientArchwoodExclusionPlacement extends PlacementFilter {
      * grass that belongs to the Ancient Archwood structure itself.
      */
     public static boolean isInsideAncientStructure(WorldGenRegion region, BlockPos pos) {
-        Structure ancient = region.registryAccess()
-                .registryOrThrow(Registries.STRUCTURE)
-                .get(ANCIENT_ARCHWOOD.location());
-        if (ancient == null) return false;
-
-        ChunkPos center = new ChunkPos(pos);
-        int search = Math.max(1, (80 + 15) >> 4);
-
-        for (int cx = center.x - search; cx <= center.x + search; cx++) {
-            for (int cz = center.z - search; cz <= center.z + search; cz++) {
-                ChunkAccess chunk;
-                try {
-                    chunk = region.getChunk(cx, cz);
-                } catch (IllegalStateException ignored) {
-                    continue;
-                }
-
-                StructureStart start = chunk.getStartForStructure(ancient);
-                if (start != null && start.isValid() && start.getBoundingBox().isInside(pos)) {
-                    return true;
-                }
+        for (BoundingBox box : getAncientArchwoodBoxes(region, pos, 0)) {
+            if (box.isInside(pos)) {
+                return true;
             }
         }
 
