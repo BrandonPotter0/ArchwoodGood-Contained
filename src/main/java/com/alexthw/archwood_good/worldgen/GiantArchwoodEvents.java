@@ -14,7 +14,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
-
 import java.util.Map;
 
 @EventBusSubscriber(modid = ArchwoodGood.MODID)
@@ -36,23 +35,32 @@ public class GiantArchwoodEvents {
         BlockState state = level.getBlockState(pos);
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
         ResourceKey<ConfiguredFeature<?, ?>> giant = GIANTS.get(id);
-        if (giant == null) {
-            return;
-        }
+        if (giant == null) return;
 
         BlockPos origin = findTwoByTwoOrigin(level, pos, state.getBlock());
-        if (origin == null) {
-            return;
+        if (origin == null) return;
+
+        // Treat the four saplings as one growth operation and consume the
+        // complete cluster before the Giant Archwood feature is placed.
+        consumeTwoByTwo(level, origin, state.getBlock());
+
+        level.registryAccess()
+                .lookupOrThrow(Registries.CONFIGURED_FEATURE)
+                .get(giant)
+                .ifPresent(event::setFeature);
+    }
+
+    private static void consumeTwoByTwo(LevelAccessor level, BlockPos origin, Block sapling) {
+        clearSapling(level, origin, sapling);
+        clearSapling(level, origin.east(), sapling);
+        clearSapling(level, origin.south(), sapling);
+        clearSapling(level, origin.east().south(), sapling);
+    }
+
+    private static void clearSapling(LevelAccessor level, BlockPos pos, Block sapling) {
+        if (level.getBlockState(pos).is(sapling)) {
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
-
-        // This custom giant-tree feature is selected through the growth event,
-        // so consume all four saplings just as vanilla 2x2 tree growth does.
-        level.setBlock(origin, Blocks.AIR.defaultBlockState(), 4);
-        level.setBlock(origin.east(), Blocks.AIR.defaultBlockState(), 4);
-        level.setBlock(origin.south(), Blocks.AIR.defaultBlockState(), 4);
-        level.setBlock(origin.east().south(), Blocks.AIR.defaultBlockState(), 4);
-
-        level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).get(giant).ifPresent(event::setFeature);
     }
 
     private static BlockPos findTwoByTwoOrigin(LevelAccessor level, BlockPos pos, Block sapling) {
