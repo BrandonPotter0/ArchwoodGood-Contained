@@ -11,13 +11,13 @@ public class AWGTreeGrowers {
 
     public static final TreeGrower ORANGE_ARCHWOOD_TREE = new TreeGrower(
             ArchwoodGood.res("orange_archwood_tree").toString(),
-            Optional.of(AWGConfiguredFeatures.GIANT_ORANGE_TREE_KEY),
+            Optional.empty(),
             Optional.of(AWGConfiguredFeatures.ORANGE_SAPLING_TREE_KEY),
             Optional.empty());
 
     public static final TreeGrower WHITE_ARCHWOOD_TREE = new TreeGrower(
             ArchwoodGood.res("white_archwood_tree").toString(),
-            Optional.of(AWGConfiguredFeatures.GIANT_WHITE_TREE_KEY),
+            Optional.empty(),
             Optional.of(AWGConfiguredFeatures.WHITE_SAPLING_TREE_KEY),
             Optional.empty());
 
