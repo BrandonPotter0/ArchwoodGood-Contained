@@ -9,21 +9,16 @@
     "water_fog_color": 3290112,
     "grass_color": 7832178,
     "foliage_color": 7894382,
+    "ambient_sound": "minecraft:ambient.soul_sand_valley.loop",
     "mood_sound": {
-      "sound": "minecraft:ambient.cave",
-      "tick_delay": 2000,
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 6000,
       "block_search_extent": 8,
       "offset": 2.0
     },
     "additions_sound": {
       "sound": "minecraft:ambient.soul_sand_valley.additions",
-      "tick_chance": 0.0111
-    },
-    "music": {
-      "sound": "minecraft:music.nether.soul_sand_valley",
-      "min_delay": 6000,
-      "max_delay": 12000,
-      "replace_current_music": true
+      "tick_chance": 0.05
     },
     "particle": {
       "options": {
