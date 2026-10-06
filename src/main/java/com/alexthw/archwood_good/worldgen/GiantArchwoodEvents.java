@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -16,13 +17,8 @@ import net.neoforged.neoforge.event.level.BlockGrowFeatureEvent;
 
 import java.util.Map;
 
-/**
- * Makes all Archwood saplings grow giant trees from a 2x2 arrangement,
- * while single saplings continue to use their normal tree feature.
- */
 @EventBusSubscriber(modid = ArchwoodGood.MODID)
 public class GiantArchwoodEvents {
-
     private static final Map<ResourceLocation, ResourceKey<ConfiguredFeature<?, ?>>> GIANTS = Map.of(
             ResourceLocation.parse("ars_nouveau:blue_archwood_sapling"), AWGConfiguredFeatures.GIANT_BLUE_TREE_KEY,
             ResourceLocation.parse("ars_nouveau:red_archwood_sapling"), AWGConfiguredFeatures.GIANT_RED_TREE_KEY,
@@ -43,9 +39,19 @@ public class GiantArchwoodEvents {
         if (giant == null) {
             return;
         }
-        if (findTwoByTwoOrigin(level, pos, state.getBlock()) == null) {
+
+        BlockPos origin = findTwoByTwoOrigin(level, pos, state.getBlock());
+        if (origin == null) {
             return;
         }
+
+        // This custom giant-tree feature is selected through the growth event,
+        // so consume all four saplings just as vanilla 2x2 tree growth does.
+        level.setBlock(origin, Blocks.AIR.defaultBlockState(), 4);
+        level.setBlock(origin.east(), Blocks.AIR.defaultBlockState(), 4);
+        level.setBlock(origin.south(), Blocks.AIR.defaultBlockState(), 4);
+        level.setBlock(origin.east().south(), Blocks.AIR.defaultBlockState(), 4);
+
         level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).get(giant).ifPresent(event::setFeature);
     }
 
