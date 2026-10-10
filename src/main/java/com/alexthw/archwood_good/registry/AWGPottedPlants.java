@@ -37,6 +37,11 @@ public final class AWGPottedPlants {
         ));
     }
 
+    /** Forces the potted block holders to register while the mod is still constructing. */
+    public static void init() {
+        // Intentionally empty; invoking this method initializes the class and its block holders.
+    }
+
     public static void registerPlants(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             FlowerPotBlock flowerPot = (FlowerPotBlock) Blocks.FLOWER_POT;
