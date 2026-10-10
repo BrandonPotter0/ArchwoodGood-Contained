@@ -2,6 +2,7 @@ package com.alexthw.archwood_good;
 
 import com.alexthw.archwood_good.registry.AWGBlockRegistry;
 import com.alexthw.archwood_good.registry.AWGItemRegistry;
+import com.alexthw.archwood_good.registry.AWGPottedPlants;
 import com.alexthw.archwood_good.worldgen.AWGFeatures;
 import com.alexthw.archwood_good.worldgen.biome.BlindingForestRegion;
 import com.alexthw.archwood_good.worldgen.biome.GlacialCavesRegion;
@@ -31,6 +32,8 @@ public class ArchwoodGood {
 
     public ArchwoodGood(IEventBus eventBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.COMMON, AWGConfig.SPEC);
+        // Initialize potted block registrations before the DeferredRegister is attached to the event bus.
+        AWGPottedPlants.init();
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
 
