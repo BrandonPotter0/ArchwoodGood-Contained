@@ -89,5 +89,8 @@
   "structure.archwood_good.archwood_keep": "Archwood Keep",
   "biome.archwood_good.fading_forest": "Fading Archwood Forest",
   "archwood_good.config.giant_archwood_trees": "Giant Archwood Trees",
-  "archwood_good.config.giant_archwood_trees.tooltip": "Enable Giant Trees in Archwood Forests. Default is on."
+  "archwood_good.config.giant_archwood_trees.tooltip": "Enable Giant Trees in Archwood Forests. Default is on.",
+  "block.archwood_good.potted_orange_archwood_sapling": "Potted Dawning Archwood Sapling",
+  "block.archwood_good.potted_white_archwood_sapling": "Potted Blinding Archwood Sapling",
+  "block.archwood_good.potted_archwood_sapling": "Potted Fading Archwood Sapling"
 }
