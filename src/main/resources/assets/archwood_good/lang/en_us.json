@@ -92,5 +92,10 @@
   "archwood_good.config.giant_archwood_trees.tooltip": "Enable Giant Trees in Archwood Forests. Default is on.",
   "block.archwood_good.potted_orange_archwood_sapling": "Potted Dawning Archwood Sapling",
   "block.archwood_good.potted_white_archwood_sapling": "Potted Blinding Archwood Sapling",
-  "block.archwood_good.potted_archwood_sapling": "Potted Fading Archwood Sapling"
+  "block.archwood_good.potted_archwood_sapling": "Potted Fading Archwood Sapling",
+  "block.ars_nouveau.potted_red_archwood_sapling": "Potted Blazing Archwood Sapling",
+  "block.ars_nouveau.potted_blue_archwood_sapling": "Potted Cascading Archwood Sapling",
+  "block.ars_elemental.potted_yellow_archwood_sapling": "Potted Flashing Archwood Sapling",
+  "block.ars_nouveau.potted_green_archwood_sapling": "Potted Flourishing Archwood Sapling",
+  "block.ars_nouveau.potted_purple_archwood_sapling": "Potted Vexing Archwood Sapling"
 }
