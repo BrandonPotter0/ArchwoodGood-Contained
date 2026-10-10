@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.setup.registry.CreativeTabRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,7 +21,11 @@ public class AWGCreativeTabRegistry {
             .displayItems((params, output) -> {
                 for (DeferredHolder<Block, ? extends Block> entry : AWGBlockRegistry.BLOCKS.getEntries()) {
                     var item = entry.get().asItem();
-                    output.accept(item.getDefaultInstance());
+                    // Creative-tab entries must be single-count stacks. Some custom item
+                    // implementations can return a default instance with a different count.
+                    if (item != Items.AIR) {
+                        output.accept(new ItemStack(item, 1));
+                    }
                 }
 
             }).withTabsBefore(CreativeTabRegistry.BLOCKS.getKey())

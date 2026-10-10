@@ -2,6 +2,7 @@ package com.alexthw.archwood_good;
 
 import com.alexthw.archwood_good.integration.ElementalModule;
 import com.alexthw.archwood_good.registry.AWGBlockRegistry;
+import com.alexthw.archwood_good.registry.AWGPottedPlants;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
@@ -11,6 +12,7 @@ public class AWGModSetup {
 
     public static void registers(IEventBus eventBux) {
         eventBux.addListener(AWGModSetup::addBlocksToTile);
+        eventBux.addListener(AWGPottedPlants::registerPlants);
         AWGBlockRegistry.BS_PROVIDERS.register(eventBux);
     }
 
