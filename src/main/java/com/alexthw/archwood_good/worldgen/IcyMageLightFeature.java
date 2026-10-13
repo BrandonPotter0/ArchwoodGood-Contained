@@ -1,6 +1,13 @@
 package com.alexthw.archwood_good.worldgen;
 
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import com.mojang.serialization.Codec;
@@ -50,7 +57,17 @@ public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
         BlockState light = BlockRegistry.LIGHT_BLOCK.get().defaultBlockState();
         level.setBlock(pos, light, 2);
         if (level.getBlockEntity(pos) instanceof LightTile tile) {
-            tile.color = random.nextFloat() < 0.35F ? ICE_WHITE : ICE_BLUE;
+            ParticleColor icyColor = random.nextFloat() < 0.35F ? ICE_WHITE : ICE_BLUE;
+            tile.setColor(icyColor);
+
+            // Ars Nouveau stores the particle animation separately from the tile colour.
+            PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
+            ColorProperty colorProperty = new ColorProperty();
+            colorProperty.particleColor = icyColor;
+            particleOptions.map.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), colorProperty);
+            LightTimeline timeline = new LightTimeline();
+            timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
+            tile.setTimeline(timeline);
             tile.setChanged();
         }
         return true;
