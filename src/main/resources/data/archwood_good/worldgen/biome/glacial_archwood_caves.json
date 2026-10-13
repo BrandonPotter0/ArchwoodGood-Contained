@@ -13,12 +13,12 @@
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
-      "offset": 2.0
+      "offset": 2
     }
   },
   "carvers": {
     "air": [
-      "minecraft:cave",
+      "archwood_good:glacial_cave_rooms",
       "minecraft:cave_extra_underground",
       "minecraft:canyon"
     ]
