@@ -18,13 +18,14 @@ import java.util.Map;
 
 /**
  * Gradually converts fluids in loaded Glacial Archwood Caves chunks.
- * Each pass scans a complete 16x16 horizontal slice at one Y level, rather
- * than relying on random samples that can miss fluids indefinitely.
+ * Each pass scans a 16x16x16 chunk slice, rather than relying on random
+ * samples that can miss fluids indefinitely.
  */
 @EventBusSubscriber(modid = "archwood_good")
 public class GlacialFreezeNearby {
     private static final int CHECK_INTERVAL_TICKS = 20;
-    private static final int CHUNKS_PER_PASS = 2;
+    private static final int CHUNKS_PER_PASS = 4;
+    private static final int Y_LEVELS_PER_PASS = 16;
 
     private static final Map<ServerLevel, LinkedHashMap<Long, ChunkPos>> LOADED_CHUNKS = new LinkedHashMap<>();
     private static final Map<ServerLevel, Integer> NEXT_CHUNK_INDEX = new LinkedHashMap<>();
@@ -90,27 +91,31 @@ public class GlacialFreezeNearby {
             if (!level.hasChunk(chunkPos.x, chunkPos.z)) continue;
 
             long key = chunkPos.toLong();
-            int y;
+            int startY;
             synchronized (LOADED_CHUNKS) {
                 Map<Long, Integer> cursors = NEXT_Y_BY_CHUNK.get(level);
                 if (cursors == null) continue;
-                y = cursors.getOrDefault(key, minY);
-                if (y < minY || y >= maxY) y = minY;
-                cursors.put(key, y + 1 >= maxY ? minY : y + 1);
+                startY = cursors.getOrDefault(key, minY);
+                if (startY < minY || startY >= maxY) startY = minY;
+                int nextY = startY + Y_LEVELS_PER_PASS;
+                cursors.put(key, nextY >= maxY ? minY : nextY);
             }
 
-            // Scan every block in this horizontal slice. The work is capped
-            // at two 16x16 slices per pass to avoid a full-chunk tick spike.
-            for (int dx = 0; dx < 16; dx++) {
-                for (int dz = 0; dz < 16; dz++) {
-                    BlockPos pos = new BlockPos(chunkPos.getMinBlockX() + dx, y, chunkPos.getMinBlockZ() + dz);
-                    if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
+            // Scan a 16x16x16 volume (4,096 positions) per selected chunk.
+            // Four chunks are processed per pass, then the queue rotates.
+            int endY = Math.min(maxY, startY + Y_LEVELS_PER_PASS);
+            for (int y = startY; y < endY; y++) {
+                for (int dx = 0; dx < 16; dx++) {
+                    for (int dz = 0; dz < 16; dz++) {
+                        BlockPos pos = new BlockPos(chunkPos.getMinBlockX() + dx, y, chunkPos.getMinBlockZ() + dz);
+                        if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
-                    FluidState fluid = level.getFluidState(pos);
-                    if (fluid.is(FluidTags.WATER)) {
-                        level.setBlock(pos, Blocks.PACKED_ICE.defaultBlockState(), 3);
-                    } else if (fluid.is(FluidTags.LAVA)) {
-                        level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3);
+                        FluidState fluid = level.getFluidState(pos);
+                        if (fluid.is(FluidTags.WATER)) {
+                            level.setBlock(pos, Blocks.PACKED_ICE.defaultBlockState(), 3);
+                        } else if (fluid.is(FluidTags.LAVA)) {
+                            level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3);
+                        }
                     }
                 }
             }
