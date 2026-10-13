@@ -11,15 +11,16 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 /**
- * Gradually freezes fluids in the Glacial Archwood Caves while the area is
- * loaded. Unlike the old implementation, this does not sweep a whole area and
- * instantly convert every fluid when a player arrives.
+ * Gradually freezes fluids near players in the Glacial Archwood Caves while
+ * the area is loaded. Sampling is concentrated around each player so nearby
+ * pools are revisited often without instantly sweeping an entire area.
  */
 @EventBusSubscriber(modid = "archwood_good")
 public class GlacialFreezeNearby {
     private static final int CHECK_INTERVAL_TICKS = 20;
-    private static final int SAMPLES_PER_PLAYER = 48;
-    private static final int HORIZONTAL_RADIUS = 48;
+    private static final int SAMPLES_PER_PLAYER = 512;
+    private static final int HORIZONTAL_RADIUS = 16;
+    private static final int VERTICAL_RADIUS = 32;
     private static final int FREEZE_CHANCE_DENOMINATOR = 3;
 
     @SubscribeEvent
@@ -27,15 +28,14 @@ public class GlacialFreezeNearby {
         if (!(event.getLevel() instanceof ServerLevel level)) return;
         if (level.getGameTime() % CHECK_INTERVAL_TICKS != 0L) return;
 
-        int minY = level.getMinBuildHeight();
-        int maxY = level.getMaxBuildHeight();
-        if (maxY <= minY) return;
-
         for (ServerPlayer player : level.players()) {
             BlockPos center = player.blockPosition();
 
             for (int sample = 0; sample < SAMPLES_PER_PLAYER; sample++) {
                 int x = center.getX() + level.getRandom().nextInt(HORIZONTAL_RADIUS * 2 + 1) - HORIZONTAL_RADIUS;
+                int minY = Math.max(level.getMinBuildHeight(), center.getY() - VERTICAL_RADIUS);
+                int maxY = Math.min(level.getMaxBuildHeight(), center.getY() + VERTICAL_RADIUS + 1);
+                if (maxY <= minY) continue;
                 int y = minY + level.getRandom().nextInt(maxY - minY);
                 int z = center.getZ() + level.getRandom().nextInt(HORIZONTAL_RADIUS * 2 + 1) - HORIZONTAL_RADIUS;
                 BlockPos pos = new BlockPos(x, y, z);
