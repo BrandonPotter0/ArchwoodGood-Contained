@@ -1,7 +1,14 @@
 package com.alexthw.archwood_good.worldgen;
 
 import com.alexthw.archwood_good.ArchwoodGood;
+import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
+import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
+import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
+import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
+import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
+import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -206,7 +213,7 @@ public class GlacialFreezeNearby {
 
     private static void tintGlacialMagelight(ServerLevel level, BlockPos pos) {
         var state = level.getBlockState(pos);
-        if (!state.is(BlockRegistry.LIGHT_BLOCK.get()) && !state.is(BlockRegistry.T_LIGHT_BLOCK.get())) return;
+        if (!state.is(BlockRegistry.LIGHT_BLOCK.get())) return;
         if (!(level.getBlockEntity(pos) instanceof LightTile tile)) return;
 
         ParticleColor current = tile.getColor();
@@ -218,9 +225,18 @@ public class GlacialFreezeNearby {
                 && current.getBlueInt() == ICE_WHITE.getBlueInt();
         if (alreadyIcyBlue || alreadyIcyWhite) return;
 
-        // A position-based choice keeps colours stable as chunks are rescanned.
-        tile.color = (Math.floorMod(pos.asLong(), 4L) == 0L) ? ICE_WHITE : ICE_BLUE;
-        tile.updateBlock();
+        // Update both the saved tile colour and the live particle timeline.
+        ParticleColor icyColor = Math.floorMod(pos.asLong(), 4L) == 0L ? ICE_WHITE : ICE_BLUE;
+        tile.setColor(icyColor);
+
+        PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
+        ColorProperty colorProperty = new ColorProperty();
+        colorProperty.particleColor = icyColor;
+        particleOptions.map.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), colorProperty);
+        LightTimeline timeline = new LightTimeline();
+        timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
+        tile.setTimeline(timeline);
+        tile.setChanged();
     }
 
     private static void enqueue(ServerLevel level, BlockPos pos, ScanStats stats) {
