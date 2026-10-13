@@ -69,8 +69,7 @@
       "minecraft:disk_gravel",
       "archwood_good:placed_glacial_packed_ice",
       "archwood_good:placed_glacial_blue_ice",
-      "archwood_good:placed_glacial_snow",
-      "archwood_good:placed_glacial_freeze_fluids"
+      "archwood_good:placed_glacial_snow"
     ],
     [],
     [],
@@ -84,12 +83,9 @@
       "archwood_good:placed_glacial_snow_piles",
       "archwood_good:placed_icy_mage_lights",
       "archwood_good:placed_glacial_priority_tree",
-      "archwood_good:placed_glacial_surface_snow",
-      "archwood_good:placed_glacial_freeze_chunk"
+      "archwood_good:placed_glacial_surface_snow"
     ],
-    [
-      "minecraft:freeze_top_layer"
-    ]
+    []
   ],
   "spawners": {
     "ambient": [
