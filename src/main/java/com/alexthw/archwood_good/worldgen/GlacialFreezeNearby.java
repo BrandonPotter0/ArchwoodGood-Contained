@@ -10,36 +10,50 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
+/**
+ * Gradually freezes fluids in the Glacial Archwood Caves while the area is
+ * loaded. Unlike the old implementation, this does not sweep a whole area and
+ * instantly convert every fluid when a player arrives.
+ */
 @EventBusSubscriber(modid = "archwood_good")
 public class GlacialFreezeNearby {
+    private static final int CHECK_INTERVAL_TICKS = 20;
+    private static final int SAMPLES_PER_PLAYER = 12;
+    private static final int HORIZONTAL_RADIUS = 12;
+    private static final int FREEZE_CHANCE_DENOMINATOR = 3;
+    private static final int MAX_FREEZING_Y = 128;
+
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
         if (!(event.getLevel() instanceof ServerLevel level)) return;
-        if (level.getGameTime() % 20L != 0L) return;
+        if (level.getGameTime() % CHECK_INTERVAL_TICKS != 0L) return;
+
+        int minY = level.getMinBuildHeight();
+        int maxY = Math.min(level.getMaxBuildHeight(), MAX_FREEZING_Y);
+        if (maxY <= minY) return;
 
         for (ServerPlayer player : level.players()) {
             BlockPos center = player.blockPosition();
             if (!level.getBiome(center).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
-            BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-            for (int dx = -6; dx <= 6; dx++) {
-                for (int dy = -6; dy <= 6; dy++) {
-                    for (int dz = -6; dz <= 6; dz++) {
-                        cursor.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
+            for (int sample = 0; sample < SAMPLES_PER_PLAYER; sample++) {
+                int x = center.getX() + level.getRandom().nextInt(HORIZONTAL_RADIUS * 2 + 1) - HORIZONTAL_RADIUS;
+                int y = minY + level.getRandom().nextInt(maxY - minY);
+                int z = center.getZ() + level.getRandom().nextInt(HORIZONTAL_RADIUS * 2 + 1) - HORIZONTAL_RADIUS;
+                BlockPos pos = new BlockPos(x, y, z);
 
-                        // Most positions are neither water nor lava. Check the
-                        // fluid first so we only perform the more expensive
-                        // biome lookup when a block can actually be changed.
-                        FluidState fluid = level.getFluidState(cursor);
-                        if (!fluid.is(FluidTags.WATER) && !fluid.is(FluidTags.LAVA)) continue;
-                        if (!level.getBiome(cursor).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
+                FluidState fluid = level.getFluidState(pos);
+                if (!fluid.is(FluidTags.WATER) && !fluid.is(FluidTags.LAVA)) continue;
+                if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
-                        if (fluid.is(FluidTags.WATER)) {
-                            level.setBlock(cursor, Blocks.ICE.defaultBlockState(), 3);
-                        } else {
-                            level.setBlock(cursor, Blocks.OBSIDIAN.defaultBlockState(), 3);
-                        }
-                    }
+                // A sampled fluid is not guaranteed to freeze immediately.
+                // Repeated visits give the area a gradual, time-based change.
+                if (level.getRandom().nextInt(FREEZE_CHANCE_DENOMINATOR) != 0) continue;
+
+                if (fluid.is(FluidTags.WATER)) {
+                    level.setBlock(pos, Blocks.ICE.defaultBlockState(), 3);
+                } else {
+                    level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3);
                 }
             }
         }
