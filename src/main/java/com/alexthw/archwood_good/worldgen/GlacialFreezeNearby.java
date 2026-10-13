@@ -1,6 +1,9 @@
 package com.alexthw.archwood_good.worldgen;
 
 import com.alexthw.archwood_good.ArchwoodGood;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
+import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
@@ -38,6 +41,8 @@ public class GlacialFreezeNearby {
     // the caves take unreasonably long to freeze.
     private static final int MAX_CONVERSIONS_PER_TICK = 2;
     private static final int MAX_PENDING_POSITIONS = 100_000;
+    private static final ParticleColor ICE_WHITE = new ParticleColor(240, 248, 255);
+    private static final ParticleColor ICE_BLUE = new ParticleColor(173, 216, 230);
 
     private static final Map<ServerLevel, LinkedHashMap<Long, ChunkPos>> LOADED_CHUNKS = new LinkedHashMap<>();
     private static final Map<ServerLevel, Integer> NEXT_CHUNK_INDEX = new LinkedHashMap<>();
@@ -184,6 +189,7 @@ public class GlacialFreezeNearby {
                         if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
                         stats.biomeMatches++;
+                        tintGlacialMagelight(level, pos);
                         FluidState fluid = level.getFluidState(pos);
                         if (fluid.is(FluidTags.WATER)) {
                             stats.waterFound++;
@@ -196,6 +202,25 @@ public class GlacialFreezeNearby {
                 }
             }
         }
+    }
+
+    private static void tintGlacialMagelight(ServerLevel level, BlockPos pos) {
+        var state = level.getBlockState(pos);
+        if (!state.is(BlockRegistry.LIGHT_BLOCK.get()) && !state.is(BlockRegistry.T_LIGHT_BLOCK.get())) return;
+        if (!(level.getBlockEntity(pos) instanceof LightTile tile)) return;
+
+        ParticleColor current = tile.getColor();
+        boolean alreadyIcyBlue = current.getRedInt() == ICE_BLUE.getRedInt()
+                && current.getGreenInt() == ICE_BLUE.getGreenInt()
+                && current.getBlueInt() == ICE_BLUE.getBlueInt();
+        boolean alreadyIcyWhite = current.getRedInt() == ICE_WHITE.getRedInt()
+                && current.getGreenInt() == ICE_WHITE.getGreenInt()
+                && current.getBlueInt() == ICE_WHITE.getBlueInt();
+        if (alreadyIcyBlue || alreadyIcyWhite) return;
+
+        // A position-based choice keeps colours stable as chunks are rescanned.
+        tile.color = (Math.floorMod(pos.asLong(), 4L) == 0L) ? ICE_WHITE : ICE_BLUE;
+        tile.updateBlock();
     }
 
     private static void enqueue(ServerLevel level, BlockPos pos, ScanStats stats) {
