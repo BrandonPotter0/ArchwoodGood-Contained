@@ -19,7 +19,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 public class GlacialFreezeNearby {
     private static final int CHECK_INTERVAL_TICKS = 20;
     private static final int SAMPLES_PER_PLAYER = 48;
-    private static final int HORIZONTAL_RADIUS = 12;
+    private static final int HORIZONTAL_RADIUS = 48;
     private static final int FREEZE_CHANCE_DENOMINATOR = 3;
 
     @SubscribeEvent
