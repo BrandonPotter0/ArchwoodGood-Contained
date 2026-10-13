@@ -64,6 +64,7 @@ public class GlacialFreezeNearby {
         long magelightsFound;
         long magelightsTinted;
         long magelightsMissingTile;
+        int conversionBudgetRemainder;
         long pendingDropped;
         long missingChunks;
         long lastSummaryTick;
@@ -121,8 +122,8 @@ public class GlacialFreezeNearby {
             PENDING_KEYS.computeIfAbsent(level, ignored -> new HashSet<>());
         }
 
-        // Do a small amount of work every tick; conversions no longer all occur
-        // during the chunk-scanning pass.
+        // Average 2.6 conversions per tick (30% above the previous rate of 2),
+        // alternating between 2 and 3 conversions without a large burst.
         convertPending(level, stats);
 
         if (level.getGameTime() % SCAN_INTERVAL_TICKS == 0L) {
@@ -259,7 +260,13 @@ public class GlacialFreezeNearby {
     }
 
     private static void convertPending(ServerLevel level, ScanStats stats) {
-        for (int i = 0; i < MAX_CONVERSIONS_PER_TICK; i++) {
+        // Fixed-point budget: 13 conversions every 5 ticks = 2.6/tick,
+        // exactly 30% faster than the previous 2/tick average.
+        stats.conversionBudgetRemainder += 13;
+        int conversionsThisTick = stats.conversionBudgetRemainder / 5;
+        stats.conversionBudgetRemainder %= 5;
+
+        for (int i = 0; i < conversionsThisTick; i++) {
             BlockPos pos;
             synchronized (LOADED_CHUNKS) {
                 ArrayDeque<BlockPos> queue = PENDING.get(level);
