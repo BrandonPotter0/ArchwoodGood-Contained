@@ -13,8 +13,15 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-/** Places an Ars Nouveau mage light tinted white or icy blue. */
+/**
+ * Places Ars Nouveau magelights with pale white or icy-blue particles.
+ * This feature is used only by Archwood Good's Glacial Archwood Caves biome,
+ * so the colour change does not affect ordinary Ars Nouveau magelights.
+ */
 public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
+    private static final ParticleColor ICE_WHITE = new ParticleColor(240, 248, 255);
+    private static final ParticleColor ICE_BLUE = new ParticleColor(173, 216, 230);
+
     public IcyMageLightFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
@@ -28,6 +35,7 @@ public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
         if (!level.getBlockState(pos).isAir()) {
             return false;
         }
+
         boolean anchored = false;
         for (Direction dir : Direction.values()) {
             if (level.getBlockState(pos.relative(dir)).isSolid()) {
@@ -42,11 +50,8 @@ public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
         BlockState light = BlockRegistry.LIGHT_BLOCK.get().defaultBlockState();
         level.setBlock(pos, light, 2);
         if (level.getBlockEntity(pos) instanceof LightTile tile) {
-            if (random.nextBoolean()) {
-                tile.color = new ParticleColor(240, 248, 255); // white
-            } else {
-                tile.color = new ParticleColor(70, 150, 255);  // blue
-            }
+            tile.color = random.nextFloat() < 0.35F ? ICE_WHITE : ICE_BLUE;
+            tile.setChanged();
         }
         return true;
     }
