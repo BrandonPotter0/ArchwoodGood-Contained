@@ -5,7 +5,8 @@
   "plugin": "com.alexthw.archwood_good.mixins.ShouldApplyMixin",
   "mixins": [
     "RuntimeDataGeneratorMixin",
-    "GlacialMagelightParticleMixin"
+    "GlacialMagelightParticleMixin",
+    "GlacialTreePriorityMixin"
   ],
   "injectors": {
     "defaultRequire": 0
