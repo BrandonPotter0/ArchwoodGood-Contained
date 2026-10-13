@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +21,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Glacial-only tree generator. Logs and leaves deliberately replace terrain
+ * in their footprint so cave walls and ceilings cannot veto a tree.
+ */
 public class GlacialPriorityTreeFeature extends Feature<NoneFeatureConfiguration> {
     public GlacialPriorityTreeFeature(Codec<NoneFeatureConfiguration> codec) { super(codec); }
 
@@ -30,80 +33,66 @@ public class GlacialPriorityTreeFeature extends Feature<NoneFeatureConfiguration
         WorldGenLevel level = context.level();
         BlockPos origin = context.origin();
         RandomSource random = context.random();
-        if (!level.getBlockState(origin).isAir()) return false;
-        BlockPos floor = origin.below();
-        if (!level.getBlockState(floor).isSolid()) return false;
 
+        // Find a solid footing beneath the candidate, even if the candidate
+        // itself landed inside a wall. Keep the search bounded for worldgen.
+        BlockPos.MutableBlockPos scan = origin.mutable();
+        boolean foundFloor = false;
+        for (int i = 0; i <= 32 && scan.getY() > level.getMinBuildHeight() + 2; i++) {
+            if (level.getBlockState(scan.below()).isSolid()) {
+                foundFloor = true;
+                break;
+            }
+            scan.move(Direction.DOWN);
+        }
+        if (!foundFloor) return false;
+        BlockPos base = scan.immutable();
         int height = 8 + random.nextInt(3);
+        boolean white = random.nextBoolean();
+        Block logBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(
+                white ? "archwood_good:white_archwood_log" : "ars_nouveau:blue_archwood_log"));
+        Block leafBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(
+                white ? "archwood_good:white_archwood_leaves" : "ars_nouveau:blue_archwood_leaves"));
+        if (logBlock == Blocks.AIR || leafBlock == Blocks.AIR) return false;
+
         Direction lean = Direction.Plane.HORIZONTAL.getRandomDirection(random);
         List<BlockPos> trunk = new ArrayList<>();
-        int x = origin.getX(), y = origin.getY(), z = origin.getZ();
+        int x = base.getX(), z = base.getZ();
         for (int i = 0; i < height; i++) {
-            BlockPos p = new BlockPos(x, y + i, z);
-            trunk.add(p);
-            trunk.add(p.relative(lean.getClockWise()));
-            if (i > 0 && i % 2 == 0 && random.nextFloat() < 0.75f) {
-                x += lean.getStepX(); z += lean.getStepZ();
-            }
-            if (i > 2 && random.nextFloat() < 0.35f) {
-                Direction kink = random.nextBoolean() ? lean.getClockWise() : lean.getCounterClockWise();
-                x += kink.getStepX(); z += kink.getStepZ();
+            trunk.add(new BlockPos(x, base.getY() + i, z));
+            if (i > 0 && i % 3 == 0 && random.nextFloat() < 0.35f) {
+                x += lean.getStepX();
+                z += lean.getStepZ();
             }
         }
-        int minX = origin.getX(), maxX = origin.getX(), minZ = origin.getZ(), maxZ = origin.getZ();
-        for (BlockPos p : trunk) {
-            minX = Math.min(minX, p.getX() - 3); maxX = Math.max(maxX, p.getX() + 3);
-            minZ = Math.min(minZ, p.getZ() - 3); maxZ = Math.max(maxZ, p.getZ() + 3);
-        }
-        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-        for (int cx = minX; cx <= maxX; cx++)
-            for (int cz = minZ; cz <= maxZ; cz++)
-                for (int cy = origin.getY(); cy <= origin.getY() + height + 3; cy++) {
-                    cursor.set(cx, cy, cz);
-                    if (canCarve(level.getBlockState(cursor))) level.setBlock(cursor, Blocks.AIR.defaultBlockState(), 2);
-                }
-        level.setBlock(floor, Blocks.DIRT.defaultBlockState(), 2);
-        level.setBlock(floor.relative(lean.getClockWise()), Blocks.DIRT.defaultBlockState(), 2);
 
-        boolean white = random.nextBoolean();
-        Block logBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(white ? "archwood_good:white_archwood_log" : "ars_nouveau:blue_archwood_log"));
-        Block leafBlock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(white ? "archwood_good:white_archwood_leaves" : "ars_nouveau:blue_archwood_leaves"));
-        if (logBlock == Blocks.AIR || leafBlock == Blocks.AIR) return false;
-        BlockState logY = withAxis(logBlock.defaultBlockState(), Direction.Axis.Y);
-        BlockState leaves = leafState(leafBlock);
-        for (BlockPos p : trunk) level.setBlock(p, logY, 2);
-        BlockPos crown = trunk.get(trunk.size() - 1);
-        Set<BlockPos> trunkPositions = new HashSet<>(trunk);
-        int leafR = 3;
-        for (int dx = -leafR; dx <= leafR; dx++)
-            for (int dz = -leafR; dz <= leafR; dz++)
-                for (int dy = -1; dy <= 2; dy++) {
-                    if (dx * dx + dz * dz + dy * dy > leafR * leafR) continue;
-                    BlockPos p = crown.offset(dx, dy, dz);
-                    if (trunkPositions.contains(p)) continue;
-                    BlockState cur = level.getBlockState(p);
-                    if (cur.isAir() || canCarve(cur)) level.setBlock(p, leaves, 2);
-                }
-        for (BlockPos p : trunk) level.setBlock(p, logY, 2);
-        return true;
-    }
-
-    private static BlockState withAxis(BlockState state, Direction.Axis axis) {
-        return state.hasProperty(RotatedPillarBlock.AXIS) ? state.setValue(RotatedPillarBlock.AXIS, axis) : state;
-    }
-    private static BlockState leafState(Block leafBlock) {
+        BlockState log = logBlock.defaultBlockState();
+        if (log.hasProperty(RotatedPillarBlock.AXIS))
+            log = log.setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
         BlockState leaves = leafBlock.defaultBlockState();
-        if (leaves.hasProperty(BlockStateProperties.DISTANCE)) leaves = leaves.setValue(BlockStateProperties.DISTANCE, 1);
-        if (leaves.hasProperty(BlockStateProperties.PERSISTENT)) leaves = leaves.setValue(BlockStateProperties.PERSISTENT, false);
-        if (leaves.hasProperty(BlockStateProperties.WATERLOGGED)) leaves = leaves.setValue(BlockStateProperties.WATERLOGGED, false);
-        return leaves;
-    }
-    private static boolean canCarve(BlockState state) {
-        if (state.isAir()) return false;
-        Block b = state.getBlock();
-        return state.is(BlockTags.BASE_STONE_OVERWORLD) || state.is(BlockTags.ICE) || state.is(BlockTags.SNOW)
-                || b == Blocks.SNOW_BLOCK || b == Blocks.SNOW || b == Blocks.PACKED_ICE || b == Blocks.BLUE_ICE
-                || b == Blocks.ICE || b == Blocks.DIRT || b == Blocks.GRASS_BLOCK || b == Blocks.GRAVEL
-                || b == Blocks.CALCITE || b == Blocks.TUFF || b == Blocks.COBBLESTONE || b == Blocks.COBBLED_DEEPSLATE;
+        if (leaves.hasProperty(BlockStateProperties.DISTANCE))
+            leaves = leaves.setValue(BlockStateProperties.DISTANCE, 1);
+        if (leaves.hasProperty(BlockStateProperties.PERSISTENT))
+            leaves = leaves.setValue(BlockStateProperties.PERSISTENT, true);
+        if (leaves.hasProperty(BlockStateProperties.WATERLOGGED))
+            leaves = leaves.setValue(BlockStateProperties.WATERLOGGED, false);
+
+        Set<BlockPos> trunkPositions = new HashSet<>(trunk);
+        BlockPos crown = trunk.get(trunk.size() - 1);
+        int radius = 3;
+        // Place foliage first, intentionally overwriting any blocks in its way.
+        for (int dx = -radius; dx <= radius; dx++)
+            for (int dz = -radius; dz <= radius; dz++)
+                for (int dy = -1; dy <= 2; dy++) {
+                    if (dx * dx + dz * dz + dy * dy > radius * radius) continue;
+                    BlockPos p = crown.offset(dx, dy, dz);
+                    if (!trunkPositions.contains(p) && p.getY() < level.getMaxBuildHeight())
+                        level.setBlock(p, leaves, 2);
+                }
+        // Logs have highest priority and overwrite terrain, leaves, and decorations.
+        for (BlockPos p : trunk)
+            if (p.getY() < level.getMaxBuildHeight()) level.setBlock(p, log, 2);
+        level.setBlock(base.below(), Blocks.DIRT.defaultBlockState(), 2);
+        return true;
     }
 }
