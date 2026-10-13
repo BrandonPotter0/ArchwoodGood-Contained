@@ -16,14 +16,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 /**
- * Places Ars Nouveau magelights with pale white or icy-blue particles.
- * This feature is used only by Archwood Good's Glacial Archwood Caves biome,
- * so the colour change does not affect ordinary Ars Nouveau magelights.
+ * Places Ars Nouveau magelights with pale white or icy-blue particles during
+ * world generation, rather than relying on a later chunk scan to recolour them.
  */
 public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
     private static final ParticleColor ICE_WHITE = new ParticleColor(240, 248, 255);
@@ -54,13 +54,20 @@ public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
+        // Use full update flags so the block entity is initialized and clients are
+        // notified where appropriate. Retrieve/create the block entity immediately
+        // from the generating chunk instead of assuming getBlockEntity has created it.
         BlockState light = BlockRegistry.LIGHT_BLOCK.get().defaultBlockState();
-        level.setBlock(pos, light, 2);
-        if (level.getBlockEntity(pos) instanceof LightTile tile) {
+        if (!level.setBlock(pos, light, 3)) {
+            return false;
+        }
+
+        if (level.getChunk(pos) instanceof LevelChunk chunk
+                && chunk.getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE) instanceof LightTile tile) {
             ParticleColor icyColor = random.nextFloat() < 0.35F ? ICE_WHITE : ICE_BLUE;
             tile.setColor(icyColor);
 
-            // Ars Nouveau stores the particle animation separately from the tile colour.
+            // The live particle timeline must carry the same colour as the tile.
             PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
             ColorProperty colorProperty = new ColorProperty();
             colorProperty.particleColor = icyColor;
@@ -69,7 +76,9 @@ public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
             timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
             tile.setTimeline(timeline);
             tile.setChanged();
+            return true;
         }
+
         return true;
     }
 }
