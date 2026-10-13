@@ -2,7 +2,6 @@ package com.alexthw.archwood_good.worldgen;
 
 import com.alexthw.archwood_good.ArchwoodGood;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -11,6 +10,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -186,6 +186,18 @@ public class GlacialFreezeNearby {
             }
 
             stats.chunksScanned++;
+
+            // Magelights are block entities, so inspect the chunk's existing
+            // block-entity map directly instead of waiting for the rotating
+            // 16-block-high scan to pass their Y level.
+            LevelChunk loadedChunk = level.getChunk(chunkPos.x, chunkPos.z);
+            for (Map.Entry<BlockPos, BlockEntity> entry : loadedChunk.getBlockEntities().entrySet()) {
+                BlockPos magelightPos = entry.getKey();
+                if (!(entry.getValue() instanceof LightTile)) continue;
+                if (!level.getBiome(magelightPos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
+                tintGlacialMagelight(level, magelightPos);
+            }
+
             int endY = Math.min(maxY, startY + Y_LEVELS_PER_PASS);
             for (int y = startY; y < endY; y++) {
                 for (int dx = 0; dx < 16; dx++) {
@@ -195,7 +207,6 @@ public class GlacialFreezeNearby {
                         if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
                         stats.biomeMatches++;
-                        tintGlacialMagelight(level, pos);
                         FluidState fluid = level.getFluidState(pos);
                         if (fluid.is(FluidTags.WATER)) {
                             stats.waterFound++;
