@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
@@ -19,21 +18,17 @@ import java.util.Map;
 
 /**
  * Gradually converts fluids in loaded Glacial Archwood Caves chunks.
- *
- * Work is driven by chunk load/unload events rather than player proximity.
- * Only a bounded number of positions are sampled per server tick. Fluids are
- * changed only when their own biome is the Glacial Archwood Caves.
+ * Each pass scans a complete 16x16 horizontal slice at one Y level, rather
+ * than relying on random samples that can miss fluids indefinitely.
  */
 @EventBusSubscriber(modid = "archwood_good")
 public class GlacialFreezeNearby {
     private static final int CHECK_INTERVAL_TICKS = 20;
     private static final int CHUNKS_PER_PASS = 2;
-    private static final int SAMPLES_PER_CHUNK = 256;
-    private static final int FREEZE_CHANCE_DENOMINATOR = 3;
 
-    // Insertion order gives loaded chunks a fair, rotating share of the work.
     private static final Map<ServerLevel, LinkedHashMap<Long, ChunkPos>> LOADED_CHUNKS = new LinkedHashMap<>();
     private static final Map<ServerLevel, Integer> NEXT_CHUNK_INDEX = new LinkedHashMap<>();
+    private static final Map<ServerLevel, Map<Long, Integer>> NEXT_Y_BY_CHUNK = new LinkedHashMap<>();
 
     @SubscribeEvent
     public static void onChunkLoad(ChunkEvent.Load event) {
@@ -43,6 +38,8 @@ public class GlacialFreezeNearby {
         synchronized (LOADED_CHUNKS) {
             LOADED_CHUNKS.computeIfAbsent(level, ignored -> new LinkedHashMap<>())
                     .put(chunk.getPos().toLong(), chunk.getPos());
+            NEXT_Y_BY_CHUNK.computeIfAbsent(level, ignored -> new LinkedHashMap<>())
+                    .putIfAbsent(chunk.getPos().toLong(), level.getMinBuildHeight());
         }
     }
 
@@ -58,10 +55,11 @@ public class GlacialFreezeNearby {
                 if (chunks.isEmpty()) {
                     LOADED_CHUNKS.remove(level);
                     NEXT_CHUNK_INDEX.remove(level);
-                } else {
-                    NEXT_CHUNK_INDEX.put(level, 0);
+                    NEXT_Y_BY_CHUNK.remove(level);
                 }
             }
+            Map<Long, Integer> cursors = NEXT_Y_BY_CHUNK.get(level);
+            if (cursors != null) cursors.remove(chunk.getPos().toLong());
         }
     }
 
@@ -84,30 +82,36 @@ public class GlacialFreezeNearby {
             NEXT_CHUNK_INDEX.put(level, (start + count) % snapshot.size());
         }
 
+        int minY = level.getMinBuildHeight();
+        int maxY = level.getMaxBuildHeight();
+        if (maxY <= minY) return;
+
         for (ChunkPos chunkPos : work) {
-            // Never force-load a chunk just to freeze it.
             if (!level.hasChunk(chunkPos.x, chunkPos.z)) continue;
 
-            int minY = level.getMinBuildHeight();
-            int maxY = level.getMaxBuildHeight();
-            if (maxY <= minY) continue;
+            long key = chunkPos.toLong();
+            int y;
+            synchronized (LOADED_CHUNKS) {
+                Map<Long, Integer> cursors = NEXT_Y_BY_CHUNK.get(level);
+                if (cursors == null) continue;
+                y = cursors.getOrDefault(key, minY);
+                if (y < minY || y >= maxY) y = minY;
+                cursors.put(key, y + 1 >= maxY ? minY : y + 1);
+            }
 
-            for (int sample = 0; sample < SAMPLES_PER_CHUNK; sample++) {
-                int x = chunkPos.getMinBlockX() + level.getRandom().nextInt(16);
-                int y = minY + level.getRandom().nextInt(maxY - minY);
-                int z = chunkPos.getMinBlockZ() + level.getRandom().nextInt(16);
-                BlockPos pos = new BlockPos(x, y, z);
+            // Scan every block in this horizontal slice. The work is capped
+            // at two 16x16 slices per pass to avoid a full-chunk tick spike.
+            for (int dx = 0; dx < 16; dx++) {
+                for (int dz = 0; dz < 16; dz++) {
+                    BlockPos pos = new BlockPos(chunkPos.getMinBlockX() + dx, y, chunkPos.getMinBlockZ() + dz);
+                    if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
-                if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
-
-                FluidState fluid = level.getFluidState(pos);
-                if (!fluid.is(FluidTags.WATER) && !fluid.is(FluidTags.LAVA)) continue;
-                if (level.getRandom().nextInt(FREEZE_CHANCE_DENOMINATOR) != 0) continue;
-
-                if (fluid.is(FluidTags.WATER)) {
-                    level.setBlock(pos, Blocks.PACKED_ICE.defaultBlockState(), 3);
-                } else {
-                    level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3);
+                    FluidState fluid = level.getFluidState(pos);
+                    if (fluid.is(FluidTags.WATER)) {
+                        level.setBlock(pos, Blocks.PACKED_ICE.defaultBlockState(), 3);
+                    } else if (fluid.is(FluidTags.LAVA)) {
+                        level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3);
+                    }
                 }
             }
         }
