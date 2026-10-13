@@ -1,10 +1,7 @@
 {
   "type": "neoforge:remove_features",
   "biomes": "archwood_good:glacial_archwood_caves",
-  "features": [
-    "minecraft:lake_water_underground",
-    "minecraft:lake_lava_underground"
-  ],
+  "features": "minecraft:lake_lava_underground",
   "steps": [
     "lakes"
   ]
