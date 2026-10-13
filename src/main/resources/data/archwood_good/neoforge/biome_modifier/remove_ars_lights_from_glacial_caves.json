@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:remove_features",
+  "biomes": "archwood_good:glacial_archwood_caves",
+  "features": "ars_nouveau:placed_lights",
+  "steps": [
+    "vegetal_decoration"
+  ]
+}
