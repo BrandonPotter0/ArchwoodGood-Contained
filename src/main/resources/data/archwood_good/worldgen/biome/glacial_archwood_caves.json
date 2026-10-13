@@ -19,7 +19,6 @@
   "carvers": {
     "air": [
       "archwood_good:glacial_cave_rooms",
-      "minecraft:cave_extra_underground",
       "minecraft:canyon"
     ]
   },
@@ -27,10 +26,7 @@
     [],
     [],
     [
-      "minecraft:amethyst_geode",
-      "archwood_good:placed_glacial_cavern",
-      "archwood_good:placed_glacial_tunnel",
-      "archwood_good:placed_glacial_narrow_tunnel"
+      "minecraft:amethyst_geode"
     ],
     [
       "minecraft:monster_room",
