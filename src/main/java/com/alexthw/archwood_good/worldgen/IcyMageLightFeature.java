@@ -1,5 +1,6 @@
 package com.alexthw.archwood_good.worldgen;
 
+import com.alexthw.archwood_good.ArchwoodGood;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
@@ -14,6 +15,8 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Places Ars Nouveau magelight blocks with a Glacial Caves colour.
  * Ars Nouveau's LightTile emits particles directly from its saved colour;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
     private static final ParticleColor ICE_WHITE = new ParticleColor(240, 248, 255);
     private static final ParticleColor ICE_BLUE = new ParticleColor(173, 216, 230);
+    private static final AtomicInteger LOGGED_PLACEMENTS = new AtomicInteger();
 
     public IcyMageLightFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
@@ -58,6 +62,18 @@ public class IcyMageLightFeature extends Feature<NoneFeatureConfiguration> {
             ParticleColor icyColor = random.nextFloat() < 0.35F ? ICE_WHITE : ICE_BLUE;
             tile.setColor(icyColor);
             tile.setChanged();
+
+            // Keep diagnostic output bounded: world generation can place many lights.
+            if (LOGGED_PLACEMENTS.getAndIncrement() < 12) {
+                ArchwoodGood.LOGGER.info(
+                        "[GlacialMageLight] Custom feature placed icy Magelight at {} in biome {} with RGB({}, {}, {}).",
+                        pos, level.getBiome(pos).unwrapKey().map(key -> key.location().toString()).orElse("unknown"),
+                        icyColor.getRedInt(), icyColor.getGreenInt(), icyColor.getBlueInt());
+            }
+        } else {
+            ArchwoodGood.LOGGER.warn(
+                    "[GlacialMageLight] Custom feature placed light block at {}, but could not obtain its LightTile block entity.",
+                    pos);
         }
 
         return true;
