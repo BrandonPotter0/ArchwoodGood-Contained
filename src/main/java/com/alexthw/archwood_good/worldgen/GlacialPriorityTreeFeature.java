@@ -18,7 +18,9 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GlacialPriorityTreeFeature extends Feature<NoneFeatureConfiguration> {
     public GlacialPriorityTreeFeature(Codec<NoneFeatureConfiguration> codec) { super(codec); }
@@ -71,13 +73,14 @@ public class GlacialPriorityTreeFeature extends Feature<NoneFeatureConfiguration
         BlockState leaves = leafState(leafBlock);
         for (BlockPos p : trunk) level.setBlock(p, logY, 2);
         BlockPos crown = trunk.get(trunk.size() - 1);
+        Set<BlockPos> trunkPositions = new HashSet<>(trunk);
         int leafR = 3;
         for (int dx = -leafR; dx <= leafR; dx++)
             for (int dz = -leafR; dz <= leafR; dz++)
                 for (int dy = -1; dy <= 2; dy++) {
                     if (dx * dx + dz * dz + dy * dy > leafR * leafR) continue;
                     BlockPos p = crown.offset(dx, dy, dz);
-                    if (trunk.contains(p)) continue;
+                    if (trunkPositions.contains(p)) continue;
                     BlockState cur = level.getBlockState(p);
                     if (cur.isAir() || canCarve(cur)) level.setBlock(p, leaves, 2);
                 }
