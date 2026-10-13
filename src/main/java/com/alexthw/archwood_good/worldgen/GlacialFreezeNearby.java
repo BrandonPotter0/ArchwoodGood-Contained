@@ -18,10 +18,9 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 @EventBusSubscriber(modid = "archwood_good")
 public class GlacialFreezeNearby {
     private static final int CHECK_INTERVAL_TICKS = 20;
-    private static final int SAMPLES_PER_PLAYER = 12;
+    private static final int SAMPLES_PER_PLAYER = 48;
     private static final int HORIZONTAL_RADIUS = 12;
     private static final int FREEZE_CHANCE_DENOMINATOR = 3;
-    private static final int MAX_FREEZING_Y = 128;
 
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
@@ -29,7 +28,7 @@ public class GlacialFreezeNearby {
         if (level.getGameTime() % CHECK_INTERVAL_TICKS != 0L) return;
 
         int minY = level.getMinBuildHeight();
-        int maxY = Math.min(level.getMaxBuildHeight(), MAX_FREEZING_Y);
+        int maxY = level.getMaxBuildHeight();
         if (maxY <= minY) return;
 
         for (ServerPlayer player : level.players()) {
