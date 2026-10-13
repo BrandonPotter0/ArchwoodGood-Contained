@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,26 +15,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * Forces stable icy Magelight particles in Glacial Archwood Caves.
  *
- * LightTile's normal tick owns the pink/random particle timeline. We replace
- * that tick only on the client and only in this biome, so its normal behaviour
- * is untouched everywhere else. This does not depend on a server-side colour
- * update or on the block entity having been available during world generation.
+ * Ars Nouveau 5.13.x ticks LightTile through ITickable.tick(Level, BlockState,
+ * BlockPos), not a no-argument BlockEntity.tick(). Replace the client particle
+ * emission only in the Glacial Archwood Caves; all other biomes keep the
+ * original Ars Nouveau behaviour.
  */
 @Mixin(LightTile.class)
 public abstract class GlacialMagelightParticleMixin {
     private static final ParticleColor ARCHWOOD_GOOD$ICE_WHITE = new ParticleColor(240, 248, 255);
     private static final ParticleColor ARCHWOOD_GOOD$ICE_BLUE = new ParticleColor(173, 216, 230);
 
-    @Inject(method = "tick()V", at = @At("HEAD"), cancellable = true, require = 1)
-    private void archwoodGood$useStableGlacialColour(CallbackInfo ci) {
-        LightTile tile = (LightTile) (Object) this;
-        Level level = tile.getLevel();
-        if (level == null || !level.isClientSide) {
-            return;
-        }
-
-        BlockPos pos = tile.getBlockPos();
-        if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) {
+    @Inject(
+            method = "tick(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V",
+            at = @At("HEAD"),
+            cancellable = true,
+            require = 1
+    )
+    private void archwoodGood$useStableGlacialColour(Level level, BlockState state, BlockPos pos, CallbackInfo ci) {
+        if (!level.isClientSide || !level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) {
             return;
         }
 
