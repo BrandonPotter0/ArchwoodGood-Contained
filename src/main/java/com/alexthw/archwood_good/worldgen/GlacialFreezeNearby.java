@@ -1,12 +1,6 @@
 package com.alexthw.archwood_good.worldgen;
 
 import com.alexthw.archwood_good.ArchwoodGood;
-import com.hollingsworth.arsnouveau.api.particle.PropertyParticleOptions;
-import com.hollingsworth.arsnouveau.api.particle.configurations.LightBlobMotion;
-import com.hollingsworth.arsnouveau.api.particle.configurations.properties.ColorProperty;
-import com.hollingsworth.arsnouveau.api.particle.timelines.LightTimeline;
-import com.hollingsworth.arsnouveau.api.particle.timelines.TimelineEntryData;
-import com.hollingsworth.arsnouveau.api.registry.ParticlePropertyRegistry;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.registry.ModParticles;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
@@ -67,6 +61,9 @@ public class GlacialFreezeNearby {
         long lavaFound;
         long waterConverted;
         long lavaConverted;
+        long magelightsFound;
+        long magelightsTinted;
+        long magelightsMissingTile;
         long pendingDropped;
         long missingChunks;
         long lastSummaryTick;
@@ -143,9 +140,10 @@ public class GlacialFreezeNearby {
                 pendingCount = pending == null ? 0 : pending.size();
             }
             ArchwoodGood.LOGGER.info(
-                    "[GlacialFreeze] dimension={}, trackedChunks={}, chunksScannedTotal={}, positionsScannedTotal={}, biomeMatchesTotal={}, waterFoundTotal={}, lavaFoundTotal={}, waterConvertedTotal={}, lavaConvertedTotal={}, pending={}, pendingDroppedTotal={}, missingChunksTotal={}",
+                    "[GlacialFreeze] dimension={}, trackedChunks={}, chunksScannedTotal={}, positionsScannedTotal={}, biomeMatchesTotal={}, waterFoundTotal={}, lavaFoundTotal={}, waterConvertedTotal={}, lavaConvertedTotal={}, magelightsFoundTotal={}, magelightsTintedTotal={}, magelightsMissingTileTotal={}, pending={}, pendingDroppedTotal={}, missingChunksTotal={}",
                     level.dimension().location(), trackedChunkCount, stats.chunksScanned, stats.positionsScanned,
                     stats.biomeMatches, stats.waterFound, stats.lavaFound, stats.waterConverted, stats.lavaConverted,
+                    stats.magelightsFound, stats.magelightsTinted, stats.magelightsMissingTile,
                     pendingCount, stats.pendingDropped, stats.missingChunks);
         }
     }
@@ -214,7 +212,14 @@ public class GlacialFreezeNearby {
     private static void tintGlacialMagelight(ServerLevel level, BlockPos pos) {
         var state = level.getBlockState(pos);
         if (!state.is(BlockRegistry.LIGHT_BLOCK.get())) return;
-        if (!(level.getBlockEntity(pos) instanceof LightTile tile)) return;
+
+        ScanStats stats = STATS.get(level);
+        if (stats != null) stats.magelightsFound++;
+
+        if (!(level.getBlockEntity(pos) instanceof LightTile tile)) {
+            if (stats != null) stats.magelightsMissingTile++;
+            return;
+        }
 
         ParticleColor current = tile.getColor();
         boolean alreadyIcyBlue = current.getRedInt() == ICE_BLUE.getRedInt()
@@ -229,6 +234,13 @@ public class GlacialFreezeNearby {
         ParticleColor icyColor = Math.floorMod(pos.asLong(), 4L) == 0L ? ICE_WHITE : ICE_BLUE;
         tile.setColor(icyColor);
         tile.setChanged();
+        if (stats != null) stats.magelightsTinted++;
+
+        ArchwoodGood.LOGGER.info(
+                "[GlacialFreeze] Recoloured Magelight at {} in {} from RGB({}, {}, {}) to RGB({}, {}, {}).",
+                pos, level.dimension().location(),
+                current.getRedInt(), current.getGreenInt(), current.getBlueInt(),
+                icyColor.getRedInt(), icyColor.getGreenInt(), icyColor.getBlueInt());
     }
 
     private static void enqueue(ServerLevel level, BlockPos pos, ScanStats stats) {
