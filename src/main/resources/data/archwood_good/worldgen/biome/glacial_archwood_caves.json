@@ -78,8 +78,9 @@
       "archwood_good:placed_glacial_ice_spikes",
       "archwood_good:placed_glacial_snow_piles",
       "archwood_good:placed_icy_mage_lights",
-      "archwood_good:placed_glacial_priority_tree",
-      "archwood_good:placed_glacial_surface_snow"
+      "archwood_good:placed_glacial_surface_snow",
+      "archwood_good:placed_glacial_cascading_tree",
+      "archwood_good:placed_glacial_blinding_tree"
     ],
     []
   ],
