@@ -225,17 +225,9 @@ public class GlacialFreezeNearby {
                 && current.getBlueInt() == ICE_WHITE.getBlueInt();
         if (alreadyIcyBlue || alreadyIcyWhite) return;
 
-        // Update both the saved tile colour and the live particle timeline.
+        // LightTile emits particles directly from its saved colour.
         ParticleColor icyColor = Math.floorMod(pos.asLong(), 4L) == 0L ? ICE_WHITE : ICE_BLUE;
         tile.setColor(icyColor);
-
-        PropertyParticleOptions particleOptions = new PropertyParticleOptions(ModParticles.NEW_GLOW_TYPE.get());
-        ColorProperty colorProperty = new ColorProperty();
-        colorProperty.particleColor = icyColor;
-        particleOptions.map.set(ParticlePropertyRegistry.COLOR_PROPERTY.get(), colorProperty);
-        LightTimeline timeline = new LightTimeline();
-        timeline.onTickEffect = new TimelineEntryData(new LightBlobMotion(), particleOptions);
-        tile.setTimeline(timeline);
         tile.setChanged();
     }
 
