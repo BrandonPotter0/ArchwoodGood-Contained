@@ -13,30 +13,41 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Gradually converts fluids in loaded Glacial Archwood Caves chunks.
- * Diagnostic summaries are logged every 10 seconds to help identify whether
- * events, biome matching, or fluid detection are failing.
+ *
+ * Scanning and conversion are deliberately separate: the scanner discovers
+ * candidate positions in a rotating set of loaded chunks, then a small global
+ * per-tick budget converts candidates over time to avoid large visual bursts.
  */
 @EventBusSubscriber(modid = ArchwoodGood.MODID)
 public class GlacialFreezeNearby {
-    private static final int CHECK_INTERVAL_TICKS = 20;
+    private static final int SCAN_INTERVAL_TICKS = 20;
     private static final int LOG_INTERVAL_TICKS = 200;
     private static final int CHUNKS_PER_PASS = 8;
     private static final int Y_LEVELS_PER_PASS = 16;
+
+    // Keep the conversion rate low and steady; increase only if testing shows
+    // the caves take unreasonably long to freeze.
+    private static final int MAX_CONVERSIONS_PER_TICK = 2;
+    private static final int MAX_PENDING_POSITIONS = 100_000;
 
     private static final Map<ServerLevel, LinkedHashMap<Long, ChunkPos>> LOADED_CHUNKS = new LinkedHashMap<>();
     private static final Map<ServerLevel, Integer> NEXT_CHUNK_INDEX = new LinkedHashMap<>();
     private static final Map<ServerLevel, Map<Long, Integer>> NEXT_Y_BY_CHUNK = new LinkedHashMap<>();
     private static final Map<ServerLevel, ScanStats> STATS = new LinkedHashMap<>();
+    private static final Map<ServerLevel, ArrayDeque<BlockPos>> PENDING = new LinkedHashMap<>();
+    private static final Map<ServerLevel, Set<Long>> PENDING_KEYS = new LinkedHashMap<>();
     private static boolean tickEventLogged = false;
 
     private static final class ScanStats {
-        long passes;
         long chunksScanned;
         long positionsScanned;
         long biomeMatches;
@@ -44,6 +55,7 @@ public class GlacialFreezeNearby {
         long lavaFound;
         long waterConverted;
         long lavaConverted;
+        long pendingDropped;
         long missingChunks;
         long lastSummaryTick;
     }
@@ -75,6 +87,8 @@ public class GlacialFreezeNearby {
                     NEXT_CHUNK_INDEX.remove(level);
                     NEXT_Y_BY_CHUNK.remove(level);
                     STATS.remove(level);
+                    PENDING.remove(level);
+                    PENDING_KEYS.remove(level);
                 }
             }
             Map<Long, Integer> cursors = NEXT_Y_BY_CHUNK.get(level);
@@ -88,25 +102,47 @@ public class GlacialFreezeNearby {
 
         if (!tickEventLogged) {
             tickEventLogged = true;
-            ArchwoodGood.LOGGER.info("[GlacialFreeze] Server level tick event received; gradual fluid scanner is active.");
+            ArchwoodGood.LOGGER.info("[GlacialFreeze] Gradual scanner and limited conversion queue are active.");
         }
 
-        if (level.getGameTime() % CHECK_INTERVAL_TICKS != 0L) return;
+        ScanStats stats;
+        synchronized (LOADED_CHUNKS) {
+            stats = STATS.computeIfAbsent(level, ignored -> new ScanStats());
+            PENDING.computeIfAbsent(level, ignored -> new ArrayDeque<>());
+            PENDING_KEYS.computeIfAbsent(level, ignored -> new HashSet<>());
+        }
 
+        // Do a small amount of work every tick; conversions no longer all occur
+        // during the chunk-scanning pass.
+        convertPending(level, stats);
+
+        if (level.getGameTime() % SCAN_INTERVAL_TICKS == 0L) {
+            scanChunks(level, stats);
+        }
+
+        if (level.getGameTime() - stats.lastSummaryTick >= LOG_INTERVAL_TICKS) {
+            stats.lastSummaryTick = level.getGameTime();
+            int trackedChunkCount;
+            int pendingCount;
+            synchronized (LOADED_CHUNKS) {
+                Map<Long, ChunkPos> chunks = LOADED_CHUNKS.get(level);
+                trackedChunkCount = chunks == null ? 0 : chunks.size();
+                ArrayDeque<BlockPos> pending = PENDING.get(level);
+                pendingCount = pending == null ? 0 : pending.size();
+            }
+            ArchwoodGood.LOGGER.info(
+                    "[GlacialFreeze] dimension={}, trackedChunks={}, chunksScannedTotal={}, positionsScannedTotal={}, biomeMatchesTotal={}, waterFoundTotal={}, lavaFoundTotal={}, waterConvertedTotal={}, lavaConvertedTotal={}, pending={}, pendingDroppedTotal={}, missingChunksTotal={}",
+                    level.dimension().location(), trackedChunkCount, stats.chunksScanned, stats.positionsScanned,
+                    stats.biomeMatches, stats.waterFound, stats.lavaFound, stats.waterConverted, stats.lavaConverted,
+                    pendingCount, stats.pendingDropped, stats.missingChunks);
+        }
+    }
+
+    private static void scanChunks(ServerLevel level, ScanStats stats) {
         ArrayList<ChunkPos> work = new ArrayList<>(CHUNKS_PER_PASS);
-        int trackedChunkCount;
         synchronized (LOADED_CHUNKS) {
             LinkedHashMap<Long, ChunkPos> chunks = LOADED_CHUNKS.get(level);
-            trackedChunkCount = chunks == null ? 0 : chunks.size();
-            if (chunks == null || chunks.isEmpty()) {
-                ScanStats stats = STATS.computeIfAbsent(level, ignored -> new ScanStats());
-                if (level.getGameTime() - stats.lastSummaryTick >= LOG_INTERVAL_TICKS) {
-                    stats.lastSummaryTick = level.getGameTime();
-                    ArchwoodGood.LOGGER.warn("[GlacialFreeze] Tick handler is running, but no loaded chunks are tracked for dimension {}. Chunk-load events may not be reaching the scanner.",
-                            level.dimension().location());
-                }
-                return;
-            }
+            if (chunks == null || chunks.isEmpty()) return;
 
             ArrayList<ChunkPos> snapshot = new ArrayList<>(chunks.values());
             int start = Math.floorMod(NEXT_CHUNK_INDEX.getOrDefault(level, 0), snapshot.size());
@@ -119,17 +155,7 @@ public class GlacialFreezeNearby {
 
         int minY = level.getMinBuildHeight();
         int maxY = level.getMaxBuildHeight();
-        if (maxY <= minY) {
-            ArchwoodGood.LOGGER.error("[GlacialFreeze] Invalid build-height range for {}: minY={}, maxY={}",
-                    level.dimension().location(), minY, maxY);
-            return;
-        }
-
-        ScanStats stats;
-        synchronized (LOADED_CHUNKS) {
-            stats = STATS.computeIfAbsent(level, ignored -> new ScanStats());
-        }
-        stats.passes++;
+        if (maxY <= minY) return;
 
         for (ChunkPos chunkPos : work) {
             if (!level.hasChunk(chunkPos.x, chunkPos.z)) {
@@ -161,27 +187,56 @@ public class GlacialFreezeNearby {
                         FluidState fluid = level.getFluidState(pos);
                         if (fluid.is(FluidTags.WATER)) {
                             stats.waterFound++;
-                            if (level.setBlock(pos, Blocks.PACKED_ICE.defaultBlockState(), 3)) {
-                                stats.waterConverted++;
-                            }
+                            enqueue(level, pos, stats);
                         } else if (fluid.is(FluidTags.LAVA)) {
                             stats.lavaFound++;
-                            if (level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3)) {
-                                stats.lavaConverted++;
-                            }
+                            enqueue(level, pos, stats);
                         }
                     }
                 }
             }
         }
+    }
 
-        if (level.getGameTime() - stats.lastSummaryTick >= LOG_INTERVAL_TICKS) {
-            stats.lastSummaryTick = level.getGameTime();
-            ArchwoodGood.LOGGER.info(
-                    "[GlacialFreeze] dimension={}, trackedChunks={}, chunksScannedTotal={}, positionsScannedTotal={}, biomeMatchesTotal={}, waterFoundTotal={}, lavaFoundTotal={}, waterConvertedTotal={}, lavaConvertedTotal={}, missingChunksTotal={}",
-                    level.dimension().location(), trackedChunkCount, stats.chunksScanned, stats.positionsScanned,
-                    stats.biomeMatches, stats.waterFound, stats.lavaFound, stats.waterConverted, stats.lavaConverted,
-                    stats.missingChunks);
+    private static void enqueue(ServerLevel level, BlockPos pos, ScanStats stats) {
+        long key = pos.asLong();
+        synchronized (LOADED_CHUNKS) {
+            Set<Long> keys = PENDING_KEYS.computeIfAbsent(level, ignored -> new HashSet<>());
+            if (keys.contains(key)) return;
+            ArrayDeque<BlockPos> queue = PENDING.computeIfAbsent(level, ignored -> new ArrayDeque<>());
+            if (queue.size() >= MAX_PENDING_POSITIONS) {
+                stats.pendingDropped++;
+                return;
+            }
+            keys.add(key);
+            queue.addLast(pos.immutable());
+        }
+    }
+
+    private static void convertPending(ServerLevel level, ScanStats stats) {
+        for (int i = 0; i < MAX_CONVERSIONS_PER_TICK; i++) {
+            BlockPos pos;
+            synchronized (LOADED_CHUNKS) {
+                ArrayDeque<BlockPos> queue = PENDING.get(level);
+                if (queue == null || queue.isEmpty()) return;
+                pos = queue.pollFirst();
+                PENDING_KEYS.getOrDefault(level, Set.of()).remove(pos.asLong());
+            }
+
+            // Do not force unloaded chunks to load just to convert a stale entry.
+            if (!level.hasChunkAt(pos)) continue;
+            if (!level.getBiome(pos).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
+
+            FluidState fluid = level.getFluidState(pos);
+            if (fluid.is(FluidTags.WATER)) {
+                if (level.setBlock(pos, Blocks.PACKED_ICE.defaultBlockState(), 3)) {
+                    stats.waterConverted++;
+                }
+            } else if (fluid.is(FluidTags.LAVA)) {
+                if (level.setBlock(pos, Blocks.OBSIDIAN.defaultBlockState(), 3)) {
+                    stats.lavaConverted++;
+                }
+            }
         }
     }
 }
