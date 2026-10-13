@@ -33,7 +33,6 @@ public class GlacialFreezeNearby {
 
         for (ServerPlayer player : level.players()) {
             BlockPos center = player.blockPosition();
-            if (!level.getBiome(center).is(AWGBiomes.GLACIAL_CAVES_KEY)) continue;
 
             for (int sample = 0; sample < SAMPLES_PER_PLAYER; sample++) {
                 int x = center.getX() + level.getRandom().nextInt(HORIZONTAL_RADIUS * 2 + 1) - HORIZONTAL_RADIUS;
