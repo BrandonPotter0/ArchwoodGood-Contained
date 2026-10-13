@@ -21,8 +21,6 @@ public class AWGFeatures {
 
     public static final DeferredHolder<Feature<?>, IcyMageLightFeature> ICY_MAGE_LIGHT =
             FEATURES.register("icy_mage_light", () -> new IcyMageLightFeature(NoneFeatureConfiguration.CODEC));
-    public static final DeferredHolder<Feature<?>, GlacialPriorityTreeFeature> GLACIAL_PRIORITY_TREE =
-            FEATURES.register("glacial_priority_tree", () -> new GlacialPriorityTreeFeature(NoneFeatureConfiguration.CODEC));
     public static final DeferredHolder<Feature<?>, GiantForestTreeFeature> GIANT_FOREST_TREE =
             FEATURES.register("giant_forest_tree", () -> new GiantForestTreeFeature(NoneFeatureConfiguration.CODEC));
     public static final DeferredHolder<TrunkPlacerType<?>, TrunkPlacerType<GiantMagicTrunkPlacer>> GIANT_MAGIC_TRUNK =
