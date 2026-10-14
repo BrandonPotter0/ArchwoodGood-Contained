@@ -27,6 +27,10 @@ public class ShouldApplyMixin implements IMixinConfigPlugin {
                 && mixinToApply.equals("com.alexthw.archwood_good.mixins.RuntimeDataGeneratorMixin")) {
             return isModLoaded.test("create");
         }
+        if (targetClassName.equals("com.hollingsworth.arsnouveau.common.block.tile.LightTile")
+                && mixinToApply.equals("com.alexthw.archwood_good.mixins.GlacialMagelightParticleMixin")) {
+            return isModLoaded.test("ars_nouveau");
+        }
         return false;
     }
 
@@ -37,7 +41,7 @@ public class ShouldApplyMixin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return List.of("RuntimeDataGeneratorMixin");
+        return List.of("RuntimeDataGeneratorMixin", "GlacialMagelightParticleMixin");
     }
 
     @Override

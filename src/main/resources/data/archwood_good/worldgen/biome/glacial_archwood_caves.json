@@ -13,13 +13,12 @@
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
-      "offset": 2.0
+      "offset": 2
     }
   },
   "carvers": {
     "air": [
-      "minecraft:cave",
-      "minecraft:cave_extra_underground",
+      "archwood_good:glacial_cave_rooms",
       "minecraft:canyon"
     ]
   },
@@ -27,10 +26,7 @@
     [],
     [],
     [
-      "minecraft:amethyst_geode",
-      "archwood_good:placed_glacial_cavern",
-      "archwood_good:placed_glacial_tunnel",
-      "archwood_good:placed_glacial_narrow_tunnel"
+      "minecraft:amethyst_geode"
     ],
     [
       "minecraft:monster_room",
@@ -69,8 +65,7 @@
       "minecraft:disk_gravel",
       "archwood_good:placed_glacial_packed_ice",
       "archwood_good:placed_glacial_blue_ice",
-      "archwood_good:placed_glacial_snow",
-      "archwood_good:placed_glacial_freeze_fluids"
+      "archwood_good:placed_glacial_snow"
     ],
     [],
     [],
@@ -83,13 +78,11 @@
       "archwood_good:placed_glacial_ice_spikes",
       "archwood_good:placed_glacial_snow_piles",
       "archwood_good:placed_icy_mage_lights",
-      "archwood_good:placed_glacial_priority_tree",
       "archwood_good:placed_glacial_surface_snow",
-      "archwood_good:placed_glacial_freeze_chunk"
+      "archwood_good:placed_glacial_cascading_tree",
+      "archwood_good:placed_glacial_blinding_tree"
     ],
-    [
-      "minecraft:freeze_top_layer"
-    ]
+    []
   ],
   "spawners": {
     "ambient": [

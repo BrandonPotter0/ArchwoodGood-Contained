@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "com.alexthw.archwood_good.mixins.ShouldApplyMixin",
   "mixins": [
-    "RuntimeDataGeneratorMixin"
+    "RuntimeDataGeneratorMixin",
+    "GlacialMagelightParticleMixin",
+    "GlacialTreePriorityMixin"
   ],
   "injectors": {
     "defaultRequire": 0
