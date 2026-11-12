@@ -12,7 +12,6 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -91,8 +90,6 @@ TagKey<Item> logTag = ItemTags.create(Utils.getID(log).withSuffix("s"));
                 tagMap.put(woodTypeId, logTag);
                 this.tag(ARCHWOOD_LOG_TAG).add(log, stripped_log, wood, stripped_wood);
                 this.tag(ARCHWOOD_STRIPPED_LOG_TAG).add(stripped_log, stripped_wood);
-                this.tag(ItemTags.LOGS).add(log, stripped_log, wood, stripped_wood);
-                this.tag(ItemTags.LOGS_THAT_BURN).add(log, stripped_log, wood, stripped_wood);
                 this.tag(ItemTags.PLANKS).add(planks);
 //                if (slab != null) {
 //                    this.tag(ItemTags.SLABS).add(slab);
@@ -134,19 +131,6 @@ TagKey<Item> logTag = ItemTags.create(Utils.getID(log).withSuffix("s"));
                 AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
                 AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get().asItem()
         );
-        this.tag(ItemTags.LOGS).add(
-                AWGBlockRegistry.FADING_ARCHWOOD_LOG.get().asItem(),
-                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
-                AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get().asItem(),
-                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get().asItem()
-        );
-        this.tag(ItemTags.LOGS_THAT_BURN).add(
-                AWGBlockRegistry.FADING_ARCHWOOD_LOG.get().asItem(),
-                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
-                AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get().asItem(),
-                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get().asItem()
-        );
-
 //        copy(BlockTags.SLABS, ItemTags.SLABS);
 //        copy(BlockTags.WOODEN_SLABS, ItemTags.WOODEN_SLABS);
 //        copy(BlockTags.STAIRS, ItemTags.STAIRS);
