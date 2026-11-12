@@ -30,7 +30,7 @@ import static com.hollingsworth.arsnouveau.common.datagen.RecipeDatagen.shapedWo
 
 public class RecipeDataGen extends RecipeProvider {
 
-    public static Ingredient ARCHWOOD_LOGS = Ingredient.of(AWGItemTagsProvider.FADING_ARCHWOOD_LOG_TAG);
+    public static Ingredient ARCHWOOD_LOGS = Ingredient.of(AWGItemTagsProvider.ARCHWOOD_LOG_TAG);
 
     public RecipeDataGen(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);

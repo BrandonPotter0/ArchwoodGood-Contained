@@ -67,6 +67,12 @@
     {
       "id": "ars_elemental:yellow_archwood_barrel",
       "required": false
-    }
+    },
+    "archwood_good:orange_archwood_wood",
+    "archwood_good:stripped_orange_archwood_wood",
+    "archwood_good:white_archwood_wood",
+    "archwood_good:stripped_white_archwood_wood",
+    "ars_nouveau:archwood_wood",
+    "ars_nouveau:stripped_archwood_wood"
   ]
 }

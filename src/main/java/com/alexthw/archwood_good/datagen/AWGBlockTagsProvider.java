@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +25,8 @@ import static com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider.MAGIC
 
 public class AWGBlockTagsProvider extends BlockTagsProvider {
 
-    public static final TagKey<Block> FADING_ARCHWOOD_LOG_TAG = BlockTags.create(ArsNouveau.prefix("archwood_logs"));
+    public static final TagKey<Block> ARCHWOOD_LOG_TAG = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood"));
+    public static final TagKey<Block> ARCHWOOD_STRIPPED_LOG_TAG = BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood_stripped"));
 
     public AWGBlockTagsProvider(DataGenerator gen, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
         super(gen.getPackOutput(), provider, ArchwoodGood.MODID, existingFileHelper);
@@ -124,7 +126,9 @@ public class AWGBlockTagsProvider extends BlockTagsProvider {
                     TagKey<Block> logTag = BlockTags.create(Utils.getID(log).withSuffix("s"));
                     this.tag(logTag).add(log, stripped_log, wood, stripped_wood);
 
-                    logsTag(log, stripped_log);
+                    logsTag(log, stripped_log, wood, stripped_wood);
+                    this.tag(ARCHWOOD_LOG_TAG).add(log, stripped_log, wood, stripped_wood);
+                    this.tag(ARCHWOOD_STRIPPED_LOG_TAG).add(stripped_log, stripped_wood);
 
                     if (leaves != null) this.tag(BlockTags.LEAVES).add(leaves);
                 }
@@ -138,7 +142,7 @@ public class AWGBlockTagsProvider extends BlockTagsProvider {
         }
 
         /// FADING_ARCHWOOD
-        this.tag(FADING_ARCHWOOD_LOG_TAG).add(
+        this.tag(ARCHWOOD_LOG_TAG).add(
                 AWGBlockRegistry.FADING_ARCHWOOD_LOG.get(),
                 AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get(),
                 AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get(),
@@ -146,7 +150,13 @@ public class AWGBlockTagsProvider extends BlockTagsProvider {
         );
         logsTag(
                 AWGBlockRegistry.FADING_ARCHWOOD_LOG.get(),
-                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get()
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get(),
+                AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get()
+        );
+        this.tag(ARCHWOOD_STRIPPED_LOG_TAG).add(
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get()
         );
         this.tag(BlockTags.LEAVES).add(AWGBlockRegistry.FADING_ARCHWOOD_LEAVES.get());
     }
