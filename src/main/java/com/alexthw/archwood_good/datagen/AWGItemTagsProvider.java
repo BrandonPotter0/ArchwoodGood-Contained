@@ -12,6 +12,8 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -32,7 +34,8 @@ import static com.hollingsworth.arsnouveau.common.datagen.ItemTagProvider.SHADY_
 
 public class AWGItemTagsProvider extends ItemTagsProvider {
 
-    public static final TagKey<Item> FADING_ARCHWOOD_LOG_TAG = ItemTags.create(ArsNouveau.prefix("archwood_logs"));
+    public static final TagKey<Item> ARCHWOOD_LOG_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood"));
+    public static final TagKey<Item> ARCHWOOD_STRIPPED_LOG_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "logs/archwood_stripped"));
     public static Map<String, TagKey<Item>> tagMap = new HashMap<>();
 
     public AWGItemTagsProvider(DataGenerator gen, CompletableFuture<HolderLookup.Provider> provider, BlockTagsProvider blockTagsProvider, @Nullable ExistingFileHelper existingFileHelper) {
@@ -83,10 +86,14 @@ public class AWGItemTagsProvider extends ItemTagsProvider {
                 Block archfruit = woodType.getBlockOfThis("archfruit");
 
                 // Tag Key - example: archwood_good:white_archwood_logs
-//                TagKey<Item> logTag = ItemTags.create(Utils.getID(log).withSuffix("s"));
-//                this.tag(logTag).add(log, stripped_log, wood, stripped_wood);
-//                tagMap.put(woodTypeId, logTag);
-//                this.tag(ItemTags.PLANKS).add(planks);
+TagKey<Item> logTag = ItemTags.create(Utils.getID(log).withSuffix("s"));
+                this.tag(logTag).add(log, stripped_log, wood, stripped_wood);
+                tagMap.put(woodTypeId, logTag);
+                this.tag(ARCHWOOD_LOG_TAG).add(log, stripped_log, wood, stripped_wood);
+                this.tag(ARCHWOOD_STRIPPED_LOG_TAG).add(stripped_log, stripped_wood);
+                this.tag(ItemTags.LOGS).add(log, stripped_log, wood, stripped_wood);
+                this.tag(ItemTags.LOGS_THAT_BURN).add(log, stripped_log, wood, stripped_wood);
+                this.tag(ItemTags.PLANKS).add(planks);
 //                if (slab != null) {
 //                    this.tag(ItemTags.SLABS).add(slab);
 //                    this.tag(ItemTags.WOODEN_SLABS).add(slab);
@@ -106,6 +113,8 @@ public class AWGItemTagsProvider extends ItemTagsProvider {
             }
 
         }
+        copy(BlockTags.LOGS, ItemTags.LOGS);
+        copy(BlockTags.LOGS_THAT_BURN, ItemTags.LOGS_THAT_BURN);
         copy(BlockTags.PLANKS, ItemTags.PLANKS);
 
         copy(BlockTags.SLABS, ItemTags.SLABS);
@@ -115,7 +124,23 @@ public class AWGItemTagsProvider extends ItemTagsProvider {
 
 
         /// FADING_ARCHWOOD
-        this.tag(FADING_ARCHWOOD_LOG_TAG).add(
+        this.tag(ARCHWOOD_LOG_TAG).add(
+                AWGBlockRegistry.FADING_ARCHWOOD_LOG.get().asItem(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
+                AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get().asItem(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get().asItem()
+        );
+        this.tag(ARCHWOOD_STRIPPED_LOG_TAG).add(
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get().asItem()
+        );
+        this.tag(ItemTags.LOGS).add(
+                AWGBlockRegistry.FADING_ARCHWOOD_LOG.get().asItem(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
+                AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get().asItem(),
+                AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_WOOD.get().asItem()
+        );
+        this.tag(ItemTags.LOGS_THAT_BURN).add(
                 AWGBlockRegistry.FADING_ARCHWOOD_LOG.get().asItem(),
                 AWGBlockRegistry.STRIPPED_FADING_ARCHWOOD_LOG.get().asItem(),
                 AWGBlockRegistry.FADING_ARCHWOOD_WOOD.get().asItem(),
