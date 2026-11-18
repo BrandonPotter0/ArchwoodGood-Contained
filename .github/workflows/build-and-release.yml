@@ -42,7 +42,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          JAR=$(find build/libs -maxdepth 1 -type f -name 'archwood_good-*.jar' ! -name '*-sources.jar' -print -quit)
+          # Match the built mod JAR regardless of archive name, capitalization, or spaces.
+          JAR=$(find build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' -print -quit)
           if [[ -z "$JAR" ]]; then
             echo "::error::No mod JAR found in build/libs"
             ls -lah build/libs
