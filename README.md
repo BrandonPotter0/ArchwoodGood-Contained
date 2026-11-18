@@ -38,11 +38,11 @@ For previous versions, see the [Releases page](https://github.com/BrandonPotter0
 
 Archwood Good supports the seven Archwood colours:
 
-- 🔴 **Red**
-- 🔵 **Blue**
-- 🟢 **Green**
-- 🟣 **Purple**
-- 🟡 **Yellow**
+- 🔴 **Blazing (Red)**
+- 🔵 **Cascading (Blue)**
+- 🟢 **Flourishing (Green)**
+- 🟣 **Vexing (Purple)**
+- 🟡 **Flashing (Yellow)**
 - 🟠 **Dawning (Orange)**
 - ⚪ **Blinding (White)**
 
