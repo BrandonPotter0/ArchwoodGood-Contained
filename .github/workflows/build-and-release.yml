@@ -38,13 +38,35 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
         run: |
-          JAR=$(find build/libs -maxdepth 1 -type f -name 'archwood_good-*.jar' ! -name '*-sources.jar' | head -n 1)
-          test -n "$JAR"
-          if gh release view "v$VERSION" >/dev/null 2>&1; then
-            gh release upload "v$VERSION" "$JAR" --clobber
+          set -euo pipefail
+
+          JAR=$(find build/libs -maxdepth 1 -type f -name 'archwood_good-*.jar' ! -name '*-sources.jar' -print -quit)
+          if [[ -z "$JAR" ]]; then
+            echo "::error::No mod JAR found in build/libs"
+            ls -lah build/libs
+            exit 1
+          fi
+
+          echo "Built artifact: $JAR"
+          echo "Looking for release $VERSION (or v$VERSION)..."
+
+          if gh release view "$VERSION" >/dev/null; then
+            RELEASE_TAG="$VERSION"
+            echo "Found existing release: $RELEASE_TAG"
+          elif gh release view "v$VERSION" >/dev/null; then
+            RELEASE_TAG="v$VERSION"
+            echo "Found existing release: $RELEASE_TAG"
           else
-            gh release create "v$VERSION" "$JAR" \
+            RELEASE_TAG="$VERSION"
+            echo "No existing release found. Creating $RELEASE_TAG..."
+            gh release create "$RELEASE_TAG" "$JAR" \
               --title "Archwood Good $VERSION for Minecraft 1.21.1" \
               --generate-notes
+            exit 0
           fi
+
+          echo "Uploading $JAR to release $RELEASE_TAG..."
+          gh release upload "$RELEASE_TAG" "$JAR" --clobber
+          echo "Release upload completed successfully."
