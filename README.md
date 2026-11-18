@@ -14,7 +14,7 @@
   <a href="https://github.com/BrandonPotter0/ArchwoodGood-Contained">Source Code</a>
 </p>
 
-**Archwood Good** is an expansion and companion mod for [Ars Nouveau](https://github.com/baileyholl/Ars-Nouveau) and [Ars Elemental](https://github.com/alexthw46/Ars-Elemental), for Minecraft **1.21.1** on **NeoForge**.
+**Archwood Good** is an expansion and companion mod for [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau) and [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental), for Minecraft **1.21.1** on **NeoForge**.
 
 The mod expands the Archwood ecosystem with additional wood content, tree growth, forest and cave environments, world-generation features, recipes, and compatibility improvements. Its goal is to make Archwood feel like a complete and varied part of a magical Minecraft world.
 
@@ -113,8 +113,8 @@ Use the release asset ending in `.jar`; do not install a `-sources.jar` file if 
 
 The following mods are required:
 
-- [Ars Nouveau](https://github.com/baileyholl/Ars-Nouveau) — provides the core Archwood ecosystem.
-- [Ars Elemental](https://github.com/alexthw46/Ars-Elemental) — provides additional Archwood variants and integration.
+- [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau) — provides the core Archwood ecosystem.
+- [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental) — provides additional Archwood variants and integration.
 
 Optional integrations:
 
@@ -149,8 +149,8 @@ Current project authors: **Alexthw, Xel'Bayria, and TheFloofyPoofy**.
 
 Special thanks to the developers and contributors of:
 
-- [Ars Nouveau](https://github.com/baileyholl/Ars-Nouveau)
-- [Ars Elemental](https://github.com/alexthw46/Ars-Elemental)
+- [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau)
+- [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental)
 - The NeoForge project and the wider Minecraft modding community.
 
 This project is licensed under the **GNU Lesser General Public License v3.0 (LGPL-3.0)**. See the repository's license file for the full license text.
