@@ -1,228 +1,166 @@
 # Archwood Good
 
-**Archwood Good** is a companion mod for **[Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau)** and **[Ars Elemental](https://github.com/Alexthw46/Ars-Elemental)** for Minecraft 1.21.1.
+<p align="center">
+  <img src="src/main/resources/logo.png" alt="Archwood Good logo" width="180">
+</p>
 
-It expands and completes the Archwood ecosystem with additional Archwood colors, wood sets, trees, forests, world generation, structures, recipes, compatibility, and atmospheric features. It is designed to make the Archwood forests feel like a larger, more varied part of an Ars Nouveau / Ars Elemental world while filling in missing content and improving how Archwood behaves in natural generation.
+<p align="center">
+  <strong>More Archwood. More variety. More magic.</strong>
+</p>
 
-> **Current version:** 1.2.75  
-> **Minecraft:** 1.21.1  
-> **Mod Loader:** NeoForge
+<p align="center">
+  <a href="https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases/latest">Latest Release</a> ·
+  <a href="https://github.com/BrandonPotter0/ArchwoodGood-Contained/issues">Report an Issue</a> ·
+  <a href="https://github.com/BrandonPotter0/ArchwoodGood-Contained">Source Code</a>
+</p>
 
-## What Does Archwood Good Add?
+**Archwood Good** is an expansion and companion mod for [Ars Nouveau](https://github.com/baileyholl/Ars-Nouveau) and [Ars Elemental](https://github.com/alexthw46/Ars-Elemental), for Minecraft **1.21.1** on **NeoForge**.
 
-Archwood Good focuses on expanding the Archwood family and making the different Archwood colors behave consistently throughout world generation and tree growth.
+The mod expands the Archwood ecosystem with additional wood content, tree growth, forest and cave environments, world-generation features, recipes, and compatibility improvements. Its goal is to make Archwood feel like a complete and varied part of a magical Minecraft world.
 
-### 🌳 Complete Archwood Tree Growth
+## Version & Downloads
 
-All seven Archwood colors are supported:
+| | |
+|---|---|
+| **Current release** | **1.2.9** |
+| **Minecraft** | **1.21.1** |
+| **Mod loader** | **NeoForge** |
+| **NeoForge build** | 21.1.233 |
+| **License** | GNU Lesser General Public License v3.0 |
 
-- 🔴 Red
-- 🔵 Blue
-- 🟢 Green
-- 🟣 Purple
-- 🟡 Yellow
-- 🟠 Orange
-- ⚪ White
+**[⬇ Download Archwood Good 1.2.9](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases/tag/1.2.9)**
 
-The Archwood tree system supports:
+For previous versions, see the [Releases page](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases).
 
-- Natural **1×1 Archwood tree** growth.
-- Natural **2×2 Giant Archwood Tree** growth.
-- Bonemeal acceleration for both normal and Giant Archwood trees.
-- Consistent Giant Tree behavior across the Archwood color family.
-- Larger, fuller Giant Archwood canopies.
-- Additional Orange and White Archwood tree generation so they can occur naturally alongside the original Ars Nouveau / Ars Elemental colors.
-- Rare mixed Orange/White Archwood generation for additional forest variety.
+## Features
 
-### 🪵 Expanded Archwood Building Blocks
+### 🌳 Expanded Archwood family
 
-Archwood Good fills out the missing wood-building content for the Archwood family, including additional Orange and White Archwood blocks and their associated items.
+Archwood Good supports the seven Archwood colours:
 
-Supported building components include:
+- Red
+- Blue
+- Green
+- Purple
+- Yellow
+- Dawning (Orange)
+- Blinding (White)
 
-- Logs
-- Stripped logs
-- Wood
-- Stripped wood
-- Planks
-- Stairs
-- Slabs
-- Doors
-- Trapdoors
-- Signs
-- Hanging signs
-- Boats and related boat content
-- Saplings
-- Leaves
-- Barrels
-- Other associated Archwood building/decorative content
+It fills out the Archwood wood family with additional building and decorative content, including logs, stripped logs, wood, planks, stairs, slabs, doors, trapdoors, signs, hanging signs, boats, saplings, leaves, barrels, and related blocks and items.
 
-### 🔨 Archwood Crafting & Recipes
+### 🌱 Tree growth
 
-Archwood Good adds and expands recipes for Archwood construction and processing.
+The expanded tree system includes:
 
-Features include:
+- Natural 1×1 Archwood tree growth.
+- Natural 2×2 Giant Archwood Tree growth.
+- Bonemeal support for normal and Giant Archwood trees.
+- Consistent Giant Tree behaviour across the supported Archwood colours.
+- Fuller Giant Archwood canopies.
+- Additional natural generation for Dawning and Blinding Archwood.
+- Rare mixed-colour forest generation.
 
-- A dedicated **Archwood Crafting Table**.
-- Expanded recipes for Orange and White Archwood.
-- Recipes for converting regular Archwood wood/log variants into their **Fading Archwood** counterparts using an Amethyst Shard.
-- Support for the Archwood colors supplied by Ars Nouveau and Ars Elemental.
-- Appropriate tags, loot tables, advancements, and recipe data for the expanded blocks.
+### 🌲 Forests and world generation
 
-## 🌲 Expanded Archwood Forests
+Archwood Good adds and expands specialized Archwood environments.
 
-Archwood Good expands the Archwood world-generation ecosystem with additional forests and specialized environments.
+#### Dawning and Blinding Archwood forests
 
-### Fading Archwood Forest
+Dawning (Orange) and Blinding (White) Archwood have dedicated world-generation support, including forests, dense tree generation, and rare mixed variants.
 
-A darker, decayed Archwood environment featuring:
+#### Fading Archwood Forest
 
-- Fading Archwood.
-- Cobwebs.
-- Skulls.
-- Wither Roses.
-- Dead bushes.
-- Cobblestone mounds.
-- White Ash particles.
-- A hostile atmosphere with undead-heavy spawning.
-- **No background music while inside the biome.**
-- Soul Sand Valley-style ambient sounds and additions in place of music.
+A darker, decayed forest environment featuring Fading Archwood, cobwebs, skulls, Wither Roses, dead bushes, cobblestone mounds, and white ash particles. Its atmosphere is intended to feel eerie and abandoned, with undead-heavy spawning and distinctive ambient presentation.
 
-The Fading Forest is intended to feel eerie, abandoned, and unnaturally quiet rather than like a conventional overworld forest.
+#### Glacial Archwood Caves
 
-### Glacial Archwood Caves
+A specialized underground environment with glacial Archwood growth, blue and white cave vegetation, ice and packed-ice formations, snow, icy Mage Lights, and custom cave generation. Its freezing behaviour has been tuned to make fluid changes more controlled and natural.
 
-A specialized underground Archwood environment featuring:
+#### Giant Archwood forests
 
-- Frozen Archwood cave generation.
-- Glacial Archwood trees.
-- Blue and White Archwood cave growth.
-- Ice and packed-ice formations.
-- Snow accumulation.
-- Frozen waterways and fluids.
-- Icy Mage Lights.
-- Specialized cave tunnels and caverns.
-- Glacial tree replacement and cave-specific generation rules.
-- Optimized freezing behavior to prevent excessive or erratic surface-water freezing.
+Giant Archwood Trees can generate naturally in Archwood Forests. This feature is enabled by default and can be disabled in the mod configuration.
 
-### Orange and White Archwood Forest Generation
+### 🏛️ Ancient Archwood Tree
 
-Orange and White Archwood receive dedicated world-generation support so they are not limited to player cultivation.
+The Ancient Archwood Tree is a rare, large-scale landmark structure in the Archwood ecosystem. It features an enormous interconnected tree with multiple branches, large roots, mixed Archwood foliage, and magical lighting.
 
-This includes:
+A configurable circular exclusion zone helps preserve the space around the structure by preventing regular Archwood trees from generating too close to it. The exclusion can be disabled, and its radius can be adjusted in the configuration.
 
-- Dedicated Orange and White Archwood forests.
-- Dense Orange/White Archwood generation.
-- Rare Orange/White Archwood mixtures.
-- Natural tree variants that follow the same growth rules as the other Archwood colors.
+### 🔨 Recipes and crafting
 
-## 🌳 Giant Archwood Forests
+Archwood Good expands crafting and processing options for the Archwood family, including:
 
-Giant Archwood Trees can be added to Archwood Forest generation through configuration.
+- The Archwood Crafting Table.
+- Additional Dawning and Blinding Archwood recipes.
+- Fading Archwood conversion recipes using an Amethyst Shard.
+- Supporting block tags, loot tables, and recipe data.
 
-- **Enabled by default.**
-- Can be disabled through the Archwood Good configuration.
-- Uses the expanded Giant Tree generation system.
-- Produces larger natural Archwood canopies.
-- Supports the full seven-color Archwood family.
+### ✨ Ars Elemental ritual integration
 
-## 🏛️ Ancient Archwood Tree
+Archwood Good adds compatibility for Ars Elemental's Tablet of Forestation rituals, including custom forest variants for Dawning, Blinding, and Fading Archwood, as well as mixed Archwood forest generation. Corresponding Dawberry and Lightchee pod generation is also supported by these custom ritual variants.
 
-Archwood Good adds the **Ancient Archwood Tree**, a rare landmark structure found in the Archwood Forest ecosystem.
+## Installation
 
-The Ancient Archwood is a massive, multi-trunk Archwood landmark featuring:
+1. Install **Minecraft 1.21.1** with **NeoForge**.
+2. Install the required dependencies listed below.
+3. Download the latest Archwood Good JAR from the [Releases page](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases).
+4. Place the JAR in your Minecraft instance's `mods` folder.
+5. Launch the game using your NeoForge profile.
 
-- A huge interconnected tree structure.
-- Multiple tiers of branches.
-- Large roots.
-- Mixed Archwood foliage.
-- Ars Nouveau and Ars Elemental Archwood colors.
-- Magical lighting elements.
-- A dedicated structure/world-generation system.
+Use the release asset ending in `.jar`; do not install a `-sources.jar` file if one is provided.
 
-### Ancient Archwood Exclusion Zone
+## Dependencies
 
-Ancient Archwood Trees have their own protected growing space.
+The following mods are required:
 
-Regular Archwood trees are prevented from generating directly around an Ancient Archwood Tree, preserving its silhouette and giving the area room to breathe.
+- [Ars Nouveau](https://github.com/baileyholl/Ars-Nouveau) — provides the core Archwood ecosystem.
+- [Ars Elemental](https://github.com/alexthw46/Ars-Elemental) — provides additional Archwood variants and integration.
 
-- The exclusion boundary is **circular**, rather than a square.
-- The default buffer is **5 blocks**.
-- The exclusion can be disabled through configuration.
-- The radius is configurable.
-- The system checks the actual Ancient Archwood structure rather than excluding an entire biome.
-- Ancient Archwood structure blocks are protected from the associated ground-dressing pass.
-- The generation logic is optimized with caching so the structure search is not repeated unnecessarily for every tree-placement attempt.
+Optional integrations:
 
-## ⚙️ World-Generation Optimization
+- **TerraBlender** — used to place the Dawning Forest biome in the Overworld.
+- **Cloth Config** — provides an in-game configuration screen for Giant Archwood Trees.
 
-Archwood Good contains a number of optimizations aimed at making its custom world generation behave more efficiently.
+Make sure you download dependency versions compatible with Minecraft 1.21.1 and your NeoForge installation. The exact dependency versions used for the current development build are listed in `gradle.properties`.
 
-Recent optimization work includes:
+## Configuration
 
-- Reduced repeated Ancient Archwood structure searches during tree placement.
-- Cached Ancient Archwood bounding-box lookups during world-generation passes.
-- More efficient exclusion-zone checks.
-- Improved Glacial Archwood freezing behavior.
-- Reduced unnecessary generation work around specialized Archwood environments.
-- More controlled interaction between Archwood tree features and surrounding world generation.
+Archwood Good provides configuration options for selected world-generation features, including:
 
-The goal is to keep the expanded Archwood generation without making the mod needlessly expensive during chunk generation.
+- **Giant Archwood Trees** — enable or disable natural Giant Archwood Tree generation.
+- **Ancient Archwood exclusion zone** — enable or disable the protected area around Ancient Archwood Trees.
+- **Exclusion radius** — adjust the size of the circular protected area.
 
-## 🧩 Ars Nouveau & Ars Elemental Integration
+Configuration files are created in the instance's `config` folder after the mod has been launched. Available settings may vary by release.
 
-Archwood Good is built specifically as a companion to **Ars Nouveau** and **Ars Elemental**.
+## Compatibility
 
-It works with the Archwood ecosystem provided by those mods rather than treating its own Orange and White Archwood content as a completely separate wood family.
+Archwood Good is designed for the Ars Nouveau and Ars Elemental ecosystem. It also includes compatibility and data support for the wider Archwood family, including recipes, tags, loot tables, and world-generation interactions.
 
-The mod expands compatibility across the Archwood colors and world-generation systems supplied by both mods, including the additional **Yellow Archwood** provided by Ars Elemental.
+- Minecraft: **1.21.1**
+- Mod loader: **NeoForge**
+- Required mods: **Ars Nouveau** and **Ars Elemental**
 
-This makes Archwood Good especially suited for modpacks centered around Ars Nouveau and its addons.
+## Credits & License
 
-- [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau)
-- [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental)
+Archwood Good builds on the original Archwood Good project by **Alexthw** and **Xel'Bayria**.
 
-## ⚙️ Configuration
+Current project authors: **Alexthw, Xel'Bayria, and TheFloofyPoofy**.
 
-Archwood Good includes configuration options for major world-generation features.
+Special thanks to the developers and contributors of:
 
-Current configurable features include:
+- [Ars Nouveau](https://github.com/baileyholl/Ars-Nouveau)
+- [Ars Elemental](https://github.com/alexthw46/Ars-Elemental)
+- The NeoForge project and the wider Minecraft modding community.
 
-- **Giant Archwood Trees** — enable or disable Giant Archwood Trees in Archwood Forests.
-- **Ancient Archwood Exclusion** — enable or disable the exclusion zone around Ancient Archwood Trees.
-- **Ancient Archwood Exclusion Radius** — configure the size of the circular buffer around Ancient Archwood Trees.
+This project is licensed under the **GNU Lesser General Public License v3.0 (LGPL-3.0)**. See the repository's license file for the full license text.
 
-The default configuration is designed to provide the full expanded Archwood experience.
+## Issues & Contributions
 
-## 🛠️ Compatibility
-
-Archwood Good is intended to work alongside the Ars Nouveau ecosystem and supports compatibility with other common Minecraft mods where appropriate.
-
-Optional integrations and compatibility support are included for various tools and mods used around the Ars ecosystem, including recipe viewers and configuration tools.
-
-## 📦 Version Information
-
-| Version | Minecraft | Mod Loader |
-|---|---|---|
-| **1.2.75** | **1.21.1** | **NeoForge** |
-
-## ❤️ Credits
-
-Archwood Good is based on the original **Archwood Good** project by **Alexthw46**.
-
-This project continues that work with additional fixes, compatibility improvements, world-generation changes, new content, optimizations, and quality-of-life improvements.
-
-Special thanks to the developers of:
-
-- [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau)
-- [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental)
-
-## 📚 Development
-
-This repository contains the source for the Archwood Good 1.21.1 NeoForge project.
-
-For development, issue reports, feature discussion, or contributions, see the repository's GitHub issues and pull requests.
+Found a bug or have an idea? Please open an issue in the [GitHub issue tracker](https://github.com/BrandonPotter0/ArchwoodGood-Contained/issues). When reporting a problem, include your Minecraft version, NeoForge version, Archwood Good version, relevant dependency versions, and a crash report or log when available.
 
 ---
 
-**Archwood Good — making the Archwood forests bigger, stranger, and a little more magical.** 🌳✨
+<p align="center">
+  <strong>Archwood Good — making the Archwood forests bigger, stranger, and a little more magical. 🌳✨</strong>
+</p>
