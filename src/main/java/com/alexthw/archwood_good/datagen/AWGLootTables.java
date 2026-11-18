@@ -111,6 +111,8 @@ public class AWGLootTables extends LootTableProvider {
                     if (woodTypeId.matches(ArsNouveau.MODID + ":archwood")) {
                         // Fading Archwood uses Ars Nouveau's namespace, but its leaves and sapling
                         // are registered by Archwood Good and need their own generated drop table.
+                        Block leaves = woodType.getBlockOfThis(VanillaWoodChildKeys.LEAVES);
+                        Block sapling = woodType.getBlockOfThis(VanillaWoodChildKeys.SAPLING);
                         if (leaves != null && sapling != null)
                             registerLeavesAndSticks(leaves, sapling);
 
