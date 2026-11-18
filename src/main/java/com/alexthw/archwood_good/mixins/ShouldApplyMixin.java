@@ -31,17 +31,23 @@ public class ShouldApplyMixin implements IMixinConfigPlugin {
                 && mixinToApply.equals("com.alexthw.archwood_good.mixins.GlacialMagelightParticleMixin")) {
             return isModLoaded.test("ars_nouveau");
         }
+        if (targetClassName.equals("alexthw.ars_elemental.common.rituals.forest.ArchwoodForestationRitual")
+                && mixinToApply.equals("com.alexthw.archwood_good.mixins.ArchwoodForestationRitualMixin")) {
+            return isModLoaded.test("ars_elemental");
+        }
         return false;
     }
 
     @Override
-    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
-
-    }
+    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
 
     @Override
     public List<String> getMixins() {
-        return List.of("RuntimeDataGeneratorMixin", "GlacialMagelightParticleMixin");
+        return List.of(
+                "RuntimeDataGeneratorMixin",
+                "GlacialMagelightParticleMixin",
+                "ArchwoodForestationRitualMixin"
+        );
     }
 
     @Override

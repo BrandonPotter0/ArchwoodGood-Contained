@@ -6,7 +6,7 @@ issueTrackerURL="https://github.com/Alexthw46/ArchwoodGood/issues?q=sort%3Aupdat
 license="GNU Lesser General Public License v3.0"
 [[mods]]
 modId="archwood_good"
-version="1.2.77"
+version="1.2.9"
 displayName="Archwood Good"
 logoFile="logo.png"
 credits="The Floofy Poofy,"
@@ -28,11 +28,9 @@ side = "BOTH"
 
 [[dependencies.archwood_good]]
 modId = "ars_elemental"
-type = "optional"
-reason = "Adds flashing archwood compat"
 versionRange = "[0.7.0,)"
-ordering="AFTER"
-side="BOTH"
+ordering = "AFTER"
+side = "BOTH"
 [[dependencies.archwood_good]]
 modId="terrablender"
 type="optional"

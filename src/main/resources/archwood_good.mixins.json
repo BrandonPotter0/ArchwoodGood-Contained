@@ -6,7 +6,8 @@
   "mixins": [
     "RuntimeDataGeneratorMixin",
     "GlacialMagelightParticleMixin",
-    "GlacialTreePriorityMixin"
+    "GlacialTreePriorityMixin",
+    "ArchwoodForestationRitualMixin"
   ],
   "injectors": {
     "defaultRequire": 0
