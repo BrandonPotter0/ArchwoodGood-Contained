@@ -38,13 +38,13 @@ For previous versions, see the [Releases page](https://github.com/BrandonPotter0
 
 Archwood Good supports the seven Archwood colours:
 
-- Red
-- Blue
-- Green
-- Purple
-- Yellow
-- Dawning (Orange)
-- Blinding (White)
+- 🔴 **Red**
+- 🔵 **Blue**
+- 🟢 **Green**
+- 🟣 **Purple**
+- 🟡 **Yellow**
+- 🟠 **Dawning (Orange)**
+- ⚪ **Blinding (White)**
 
 It fills out the Archwood wood family with additional building and decorative content, including logs, stripped logs, wood, planks, stairs, slabs, doors, trapdoors, signs, hanging signs, boats, saplings, leaves, barrels, and related blocks and items.
 
