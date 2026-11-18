@@ -1,7 +1,7 @@
 # Archwood Good
 
 <p align="center">
-  <img src="src/main/resources/logo.png" alt="Archwood Good logo" width="180">
+  <img src="src/generated/resources/assets/Archwood%20Wizard%20Logo%20with%20Magical%20Cubes.png" alt="Archwood Good — wizard and magical Archwood cubes" width="100%">
 </p>
 
 <p align="center">
