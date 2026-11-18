@@ -116,10 +116,11 @@ The following mods are required:
 - [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau) — provides the core Archwood ecosystem.
 - [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental) — provides additional Archwood variants and integration.
 
-Optional integrations:
+Optional integration:
 
-- **TerraBlender** — used to place the Dawning Forest biome in the Overworld.
 - **Cloth Config** — provides an in-game configuration screen for Giant Archwood Trees.
+
+TerraBlender is **not required**. Archwood Good's biomes can generate without it.
 
 Make sure you download dependency versions compatible with Minecraft 1.21.1 and your NeoForge installation. The exact dependency versions used for the current development build are listed in `gradle.properties`.
 
