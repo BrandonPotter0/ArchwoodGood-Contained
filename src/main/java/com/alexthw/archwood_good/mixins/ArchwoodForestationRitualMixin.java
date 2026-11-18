@@ -22,14 +22,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 /**
- * Adds Archwood Good's Orange (Dawning) and White (Blinding) saplings to
- * Ars Elemental's Archwood Forestation ritual without changing Ars Elemental.
+ * Adds Archwood Good's Orange (Dawning), White (Blinding), and Fading saplings
+ * to Ars Elemental's Archwood Forestation ritual without changing Ars Elemental.
  */
 @Mixin(targets = "alexthw.ars_elemental.common.rituals.forest.ArchwoodForestationRitual", remap = false)
 public abstract class ArchwoodForestationRitualMixin {
 
     private static final int ARCHWOOD_GOOD$DAWNING = 5;
     private static final int ARCHWOOD_GOOD$BLINDING = 6;
+    private static final int ARCHWOOD_GOOD$FADING = 7;
 
     @Shadow(remap = false)
     int biomeType;
@@ -47,6 +48,9 @@ public abstract class ArchwoodForestationRitualMixin {
             cir.setReturnValue(true);
         } else if (blockItem.getBlock() == AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get()) {
             biomeType = ARCHWOOD_GOOD$BLINDING;
+            cir.setReturnValue(true);
+        } else if (blockItem.getBlock() == AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get()) {
+            biomeType = ARCHWOOD_GOOD$FADING;
             cir.setReturnValue(true);
         }
     }
@@ -88,7 +92,9 @@ public abstract class ArchwoodForestationRitualMixin {
             return;
         }
 
-        if (biomeType != ARCHWOOD_GOOD$DAWNING && biomeType != ARCHWOOD_GOOD$BLINDING) {
+        if (biomeType != ARCHWOOD_GOOD$DAWNING
+                && biomeType != ARCHWOOD_GOOD$BLINDING
+                && biomeType != ARCHWOOD_GOOD$FADING) {
             return;
         }
 
@@ -99,11 +105,15 @@ public abstract class ArchwoodForestationRitualMixin {
                     List.of(AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().defaultBlockState()), 8, 0.8));
             features.add(new ArchpodFeature(
                     1, 0.15, AWGBlockRegistry.DAWNBERRY_POD.get().defaultBlockState()));
-        } else {
+        } else if (biomeType == ARCHWOOD_GOOD$BLINDING) {
             features.add(new RandomTreeFeature(
                     List.of(AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().defaultBlockState()), 8, 0.8));
             features.add(new ArchpodFeature(
                     1, 0.15, AWGBlockRegistry.LIGHTCHEE_POD.get().defaultBlockState()));
+        } else {
+            // Fading Archwood has no Archwood Good fruit pod, so generate trees only.
+            features.add(new RandomTreeFeature(
+                    List.of(AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get().defaultBlockState()), 8, 0.8));
         }
 
         features.add(new PlaceableLightFeature(4, 0.1));
