@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Uses the ritual's persisted consumed-item list to select Archwood Good
- * variants reliably, and excludes Fading from mixed Archwood forests.
+ * Adds Archwood Good's individual sapling variants and excludes Fading from
+ * mixed forests, while leaving Ars Elemental's original variants untouched.
  */
 @Mixin(targets = "alexthw.ars_elemental.common.rituals.forest.ArchwoodForestationRitual", remap = false)
 public abstract class ArchwoodForestationRitualMixin {
@@ -30,30 +30,38 @@ public abstract class ArchwoodForestationRitualMixin {
     private void archwoodGood$handleSelectedAndMixedForests(
             List<IPlaceableFeature> features, CallbackInfo ci) {
 
-        // selectedSapling is a transient field in Ars Elemental and is not
-        // serialized. The consumed-item list is persisted by AbstractRitual,
-        // so use it to recover the player's Archwood Good sapling selection.
-        // getConsumedItems() is inherited from AbstractRitual, not declared on
-        // ArchwoodForestationRitual. Cast to the real superclass to call it.
+        // First determine whether the player selected any registered sapling.
+        // Ars Elemental's original five variants must retain their own addFeatures
+        // implementation, so only intercept selections belonging to Archwood Good.
         for (ItemStack stack : ((AbstractRitual) (Object) this).getConsumedItems()) {
-            if (stack.is(AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().asItem())
-                    || stack.is(AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().asItem())
-                    || stack.is(AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get().asItem())) {
-                ArchwoodVariant selected = ArchwoodVariantsRegistry.get(stack.getItem());
-                if (selected != null) {
-                    features.add(new BonemealFeature(6, 0.4));
-                    features.add(selected.treeFeature().get());
-                    features.add(selected.plantFeature().get());
-                    features.add(selected.podFeature().get());
-                    features.add(new PlaceableLightFeature(4, 0.1));
-                    ci.cancel();
-                    return;
-                }
+            ArchwoodVariant selected = ArchwoodVariantsRegistry.get(stack.getItem());
+            if (selected == null) {
+                continue;
             }
+
+            boolean isArchwoodGoodSapling =
+                    stack.is(AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().asItem())
+                    || stack.is(AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().asItem())
+                    || stack.is(AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get().asItem());
+
+            if (!isArchwoodGoodSapling) {
+                // This is one of Ars Elemental's original five saplings.
+                // Do not cancel: let Ars Elemental generate its original forest.
+                return;
+            }
+
+            // Archwood Good sapling selected: generate only its corresponding forest.
+            features.add(new BonemealFeature(6, 0.4));
+            features.add(selected.treeFeature().get());
+            features.add(selected.plantFeature().get());
+            features.add(selected.podFeature().get());
+            features.add(new PlaceableLightFeature(4, 0.1));
+            ci.cancel();
+            return;
         }
 
-        // No Archwood Good sapling was consumed: preserve mixed-forest
-        // generation, but deliberately omit Fading from its feature pool.
+        // No individual registered sapling was selected: generate a mixed forest,
+        // excluding Fading while retaining Ars Elemental's other registered variants.
         features.add(new BonemealFeature(6, 0.4));
 
         List<BlockState> saplings = new ArrayList<>();
