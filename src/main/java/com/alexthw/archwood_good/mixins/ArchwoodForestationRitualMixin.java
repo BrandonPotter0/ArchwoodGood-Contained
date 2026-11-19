@@ -24,7 +24,7 @@ public abstract class ArchwoodForestationRitualMixin {
             method = "addFeatures",
             at = @At(
                     value = "INVOKE",
-                    target = "Lalexthw/ars_elemental/common/rituals/forest/ArchwoodVariantsRegistry;getAll()Ljava/util//Collection;"
+                    target = "Lalexthw/ars_elemental/common/rituals/forest/ArchwoodVariantsRegistry;getAll()Ljava/util/Collection;"
             ),
             remap = false
     )
