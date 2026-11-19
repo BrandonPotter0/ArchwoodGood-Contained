@@ -24,9 +24,11 @@ public final class ArsElementalForestationCompat {
     private ArsElementalForestationCompat() {
     }
 
+    private static IPlaceableFeature newNoOpFeature() {
+        return new PlaceBlockFeature(0, 0, Blocks.AIR::defaultBlockState);
+    }
+
     public static void registerVariants() {
-        IPlaceableFeature noOpFeature = new PlaceBlockFeature(
-                0, 0, Blocks.AIR::defaultBlockState);
 
         ArchwoodVariantsRegistry.register(new ArchwoodVariantsRegistry.ArchwoodVariant(
                 AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().asItem(),
@@ -34,7 +36,7 @@ public final class ArsElementalForestationCompat {
                 () -> new RandomTreeFeature(
                         List.of(AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().defaultBlockState()),
                         8, 0.8),
-                () -> noOpFeature,
+                ArsElementalForestationCompat::newNoOpFeature,
                 () -> new ArchpodFeature(
                         1, 0.15, AWGBlockRegistry.DAWNBERRY_POD.get().defaultBlockState()),
                 () -> AWGBiomes.DAWNING_FOREST_KEY
@@ -60,8 +62,8 @@ public final class ArsElementalForestationCompat {
                 () -> new RandomTreeFeature(
                         List.of(AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get().defaultBlockState()),
                         8, 0.8),
-                () -> noOpFeature,
-                () -> noOpFeature,
+                ArsElementalForestationCompat::newNoOpFeature,
+                ArsElementalForestationCompat::newNoOpFeature,
                 () -> AWGBiomes.FADING_FOREST_KEY
         ));
     }
