@@ -163,7 +163,7 @@ dependencies {
 
     //+ REQUIRED MODS
     implementation("com.hollingsworth.ars_nouveau:ars_nouveau-$minecraft_version:$nouveau_version")
-    implementation ("com.alexthw.ars_elemental:ars_elemental-$minecraft_version:$elemental_version@jar")
+    implementation "curse.maven:ars-elemental-561470:9703632"
     implementation("net.mehvahdjukaar:moonlight-neoforge:$moonlight_version:neoforge") {
         transitive = false
     }
