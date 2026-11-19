@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 
-import static com.alexthw.archwood_good.worldgen.trees.AWGTreeGrowers.*;
 
 /**
  * Registers Archwood Good saplings with Ars Elemental's 1.21.1
@@ -48,7 +47,7 @@ public final class ArsElementalForestationCompat {
                 () -> new RandomTreeFeature(
                         List.of(AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().defaultBlockState()),
                         8, 0.8),
-                () -> noOpFeature,
+                ArsElementalForestationCompat::newNoOpFeature,
                 () -> new ArchpodFeature(
                         1, 0.15, AWGBlockRegistry.LIGHTCHEE_POD.get().defaultBlockState()),
                 () -> AWGBiomes.BLINDING_FOREST_KEY
