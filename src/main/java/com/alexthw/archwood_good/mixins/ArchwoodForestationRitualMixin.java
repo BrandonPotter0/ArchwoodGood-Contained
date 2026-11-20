@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Keeps Ars Elemental responsible for all forest feature generation.
@@ -34,7 +35,7 @@ public abstract class ArchwoodForestationRitualMixin {
 
     @Inject(method = "addFeatures", at = @At("HEAD"), remap = false)
     private void archwoodGood$restoreSelectedSapling(
-            Collection<?> rawFeatures, CallbackInfo ci) {
+            List<?> rawFeatures, CallbackInfo ci) {
         selectedSapling = null;
 
         for (ItemStack stack : ((AbstractRitual) (Object) this).getConsumedItems()) {
