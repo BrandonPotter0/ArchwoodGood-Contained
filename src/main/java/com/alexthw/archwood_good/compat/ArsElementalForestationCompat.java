@@ -33,14 +33,14 @@ public final class ArsElementalForestationCompat {
                         List.of(AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().defaultBlockState()),
                         8, 0.8),
                 () -> new NamedPlaceBlockFeature(
-                        2, 0.15, Blocks.PUMPKIN::defaultBlockState,
+                        2, 0.1, Blocks.PUMPKIN::defaultBlockState,
                         "archwood_good_dawning_pumpkin"),
                 () -> new ArchpodFeature(
                         1, 0.15, AWGBlockRegistry.DAWNBERRY_POD.get().defaultBlockState()),
                 () -> AWGBiomes.DAWNING_FOREST_KEY
         ));
 
-        // Blinding: white Archwood, Lightchee pods, and abundant white tulips.
+        // Blinding: white Archwood, Lightchee pods, and white tulips.
         ArchwoodVariantsRegistry.register(new ArchwoodVariantsRegistry.ArchwoodVariant(
                 AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().asItem(),
                 AWGBlockRegistry.LIGHTCHEE_POD.get().asItem(),
@@ -48,7 +48,7 @@ public final class ArsElementalForestationCompat {
                         List.of(AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().defaultBlockState()),
                         8, 0.8),
                 () -> new NamedPlaceBlockFeature(
-                        2, 0.2, Blocks.WHITE_TULIP::defaultBlockState,
+                        2, 0.1, Blocks.WHITE_TULIP::defaultBlockState,
                         "archwood_good_blinding_tulip"),
                 () -> new ArchpodFeature(
                         1, 0.15, AWGBlockRegistry.LIGHTCHEE_POD.get().defaultBlockState()),
