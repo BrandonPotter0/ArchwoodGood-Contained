@@ -1,122 +1,63 @@
 package com.alexthw.archwood_good.mixins;
 
-import alexthw.ars_elemental.common.rituals.forest.ArchpodFeature;
-import alexthw.ars_elemental.common.rituals.forest.PlaceableLightFeature;
-import alexthw.ars_elemental.registry.ModItems;
+import alexthw.ars_elemental.common.rituals.forest.ArchwoodVariantsRegistry;
+import alexthw.ars_elemental.common.rituals.forest.ArchwoodVariantsRegistry.ArchwoodVariant;
 import com.alexthw.archwood_good.registry.AWGBlockRegistry;
-import com.hollingsworth.arsnouveau.api.ritual.features.BonemealFeature;
-import com.hollingsworth.arsnouveau.api.ritual.features.IPlaceableFeature;
-import com.hollingsworth.arsnouveau.api.ritual.features.PlaceBlockFeature;
-import com.hollingsworth.arsnouveau.api.ritual.features.RandomTreeFeature;
-import com.hollingsworth.arsnouveau.setup.registry.BlockRegistry;
-import net.minecraft.world.item.BlockItem;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.SaplingBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
- * Adds Archwood Good's Orange (Dawning), White (Blinding), and Fading saplings
- * to Ars Elemental's Archwood Forestation ritual without changing Ars Elemental.
+ * Keeps Ars Elemental responsible for all forest feature generation.
+ *
+ * Ars Elemental's canConsumeItem clears selectedSapling whenever it checks a
+ * non-sapling augment. Restore the registered sapling from the ritual's actual
+ * consumed items immediately before Ars Elemental builds its features.
+ * The original five variants and Archwood Good's three variants then use the
+ * dependency's own individual-variant branch.
+ *
+ * For the default mixed forest only, omit Fading from getAll().
  */
 @Mixin(targets = "alexthw.ars_elemental.common.rituals.forest.ArchwoodForestationRitual", remap = false)
 public abstract class ArchwoodForestationRitualMixin {
 
-    private static final int ARCHWOOD_GOOD$DAWNING = 5;
-    private static final int ARCHWOOD_GOOD$BLINDING = 6;
-    private static final int ARCHWOOD_GOOD$FADING = 7;
+    @Shadow
+    private Item selectedSapling;
 
-    @Shadow(remap = false)
-    int biomeType;
+    @Inject(method = "addFeatures", at = @At("HEAD"), remap = false)
+    private void archwoodGood$restoreSelectedSapling(
+            List<?> rawFeatures, CallbackInfo ci) {
+        selectedSapling = null;
 
-    @Inject(method = "canConsumeItem", at = @At("RETURN"), cancellable = true, remap = false)
-    private void archwoodGood$acceptAdditionalSaplings(
-            ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (!(stack.getItem() instanceof BlockItem blockItem)
-                || !(blockItem.getBlock() instanceof SaplingBlock)) {
-            return;
-        }
-
-        if (blockItem.getBlock() == AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get()) {
-            biomeType = ARCHWOOD_GOOD$DAWNING;
-            cir.setReturnValue(true);
-        } else if (blockItem.getBlock() == AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get()) {
-            biomeType = ARCHWOOD_GOOD$BLINDING;
-            cir.setReturnValue(true);
-        } else if (blockItem.getBlock() == AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get()) {
-            biomeType = ARCHWOOD_GOOD$FADING;
-            cir.setReturnValue(true);
+        for (ItemStack stack : ((AbstractRitual) (Object) this).getConsumedItems()) {
+            if (ArchwoodVariantsRegistry.get(stack.getItem()) != null) {
+                selectedSapling = stack.getItem();
+                return;
+            }
         }
     }
 
-    @Inject(method = "addFeatures", at = @At("HEAD"), cancellable = true, remap = false)
-    private void archwoodGood$addDawningAndBlindingFeatures(
-            List<IPlaceableFeature> features, CallbackInfo ci) {
-        if (biomeType == -1) {
-            // Preserve Ars Elemental's mixed forest, adding both Archwood Good trees
-            // to the same RandomTreeFeature so all seven variants share one selection pool.
-            features.add(new BonemealFeature(6, 0.4));
-            features.add(new RandomTreeFeature(List.of(
-                    BlockRegistry.BLAZING_SAPLING.defaultBlockState(),
-                    BlockRegistry.CASCADING_SAPLING.defaultBlockState(),
-                    BlockRegistry.VEXING_SAPLING.defaultBlockState(),
-                    BlockRegistry.FLOURISHING_SAPLING.defaultBlockState(),
-                    ModItems.FLASHING_SAPLING.get().defaultBlockState(),
-                    AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().defaultBlockState(),
-                    AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().defaultBlockState()
-            ), 8, 0.8));
-            features.add(new PlaceBlockFeature(
-                    2, 0.1, BlockRegistry.SOURCEBERRY_BUSH.get()::defaultBlockState));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, BlockRegistry.BOMBEGRANTE_POD.defaultBlockState()));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, BlockRegistry.FROSTAYA_POD.defaultBlockState()));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, BlockRegistry.BASTION_POD.defaultBlockState()));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, BlockRegistry.MENDOSTEEN_POD.defaultBlockState()));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, ModItems.FLASHING_POD.get().defaultBlockState()));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, AWGBlockRegistry.DAWNBERRY_POD.get().defaultBlockState()));
-            features.add(new ArchpodFeature(
-                    0.5, 0.1, AWGBlockRegistry.LIGHTCHEE_POD.get().defaultBlockState()));
-            features.add(new PlaceableLightFeature(4, 0.1));
-            ci.cancel();
-            return;
-        }
-
-        if (biomeType != ARCHWOOD_GOOD$DAWNING
-                && biomeType != ARCHWOOD_GOOD$BLINDING
-                && biomeType != ARCHWOOD_GOOD$FADING) {
-            return;
-        }
-
-        features.add(new BonemealFeature(6, 0.4));
-
-        if (biomeType == ARCHWOOD_GOOD$DAWNING) {
-            features.add(new RandomTreeFeature(
-                    List.of(AWGBlockRegistry.ORANGE_ARCHWOOD_SAPLING.get().defaultBlockState()), 8, 0.8));
-            features.add(new ArchpodFeature(
-                    1, 0.15, AWGBlockRegistry.DAWNBERRY_POD.get().defaultBlockState()));
-        } else if (biomeType == ARCHWOOD_GOOD$BLINDING) {
-            features.add(new RandomTreeFeature(
-                    List.of(AWGBlockRegistry.WHITE_ARCHWOOD_SAPLING.get().defaultBlockState()), 8, 0.8));
-            features.add(new ArchpodFeature(
-                    1, 0.15, AWGBlockRegistry.LIGHTCHEE_POD.get().defaultBlockState()));
-        } else {
-            // Fading Archwood has no Archwood Good fruit pod, so generate trees only.
-            features.add(new RandomTreeFeature(
-                    List.of(AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get().defaultBlockState()), 8, 0.8));
-        }
-
-        features.add(new PlaceableLightFeature(4, 0.1));
-        ci.cancel();
+    @Redirect(
+            method = "addFeatures",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lalexthw/ars_elemental/common/rituals/forest/ArchwoodVariantsRegistry;getAll()Ljava/util/Collection;"
+            ),
+            remap = false
+    )
+    private Collection<ArchwoodVariant> archwoodGood$excludeFadingFromMixedForests() {
+        Item fadingSapling = AWGBlockRegistry.FADING_ARCHWOOD_SAPLING.get().asItem();
+        return ArchwoodVariantsRegistry.getAll().stream()
+                .filter(variant -> !variant.sapling().equals(fadingSapling))
+                .toList();
     }
 }

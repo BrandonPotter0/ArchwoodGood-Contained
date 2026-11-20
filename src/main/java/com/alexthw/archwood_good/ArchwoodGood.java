@@ -1,6 +1,7 @@
 package com.alexthw.archwood_good;
 
 import com.alexthw.archwood_good.registry.AWGBlockRegistry;
+import com.alexthw.archwood_good.compat.ArsElementalForestationCompat;
 import com.alexthw.archwood_good.registry.AWGItemRegistry;
 import com.alexthw.archwood_good.registry.AWGPottedPlants;
 import com.alexthw.archwood_good.worldgen.AWGFeatures;
@@ -51,6 +52,10 @@ public class ArchwoodGood {
 
     private static void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+            if (ModList.get().isLoaded("ars_elemental")) {
+                ArsElementalForestationCompat.registerVariants();
+                LOGGER.info("Registered Dawning, Blinding, and Fading Archwood Forestation variants with Ars Elemental");
+            }
             if (ModList.get().isLoaded("terrablender")) {
                 Regions.register(new DawningForestRegion(res("overworld_dawning"), 2));
                 Regions.register(new BlindingForestRegion(res("overworld_blinding"), 2));

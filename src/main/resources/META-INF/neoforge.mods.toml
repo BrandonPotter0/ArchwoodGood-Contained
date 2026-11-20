@@ -28,7 +28,7 @@ side = "BOTH"
 
 [[dependencies.archwood_good]]
 modId = "ars_elemental"
-versionRange = "[0.7.0,)"
+versionRange = "[0.7.11.2,)"
 ordering = "AFTER"
 side = "BOTH"
 [[dependencies.archwood_good]]
