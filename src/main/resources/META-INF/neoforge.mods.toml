@@ -34,7 +34,7 @@ side = "BOTH"
 [[dependencies.archwood_good]]
 modId="terrablender"
 type="optional"
-reason="Places the Dawning Forest biome in the overworld"
+reason="Enables natural world generation for the Dawning, Blinding, Fading, and Glacial Archwood biomes"
 versionRange="[4.0,)"
 ordering="AFTER"
 side="BOTH"
