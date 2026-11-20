@@ -3,7 +3,7 @@ package com.alexthw.archwood_good.compat;
 import alexthw.ars_elemental.common.rituals.forest.ArchpodFeature;
 import alexthw.ars_elemental.common.rituals.forest.ArchwoodVariantsRegistry;
 import com.alexthw.archwood_good.registry.AWGBlockRegistry;
-import com.alexthw.archwood_good.worldgen.provider.AWGBiomes;
+import com.alexthw.archwood_good.worldgen.AWGBiomes;
 import com.hollingsworth.arsnouveau.api.ritual.features.IPlaceableFeature;
 import com.hollingsworth.arsnouveau.api.ritual.features.PlaceBlockFeature;
 import com.hollingsworth.arsnouveau.api.ritual.features.RandomTreeFeature;
