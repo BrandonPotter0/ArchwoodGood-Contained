@@ -22,7 +22,8 @@ The mod expands the Archwood ecosystem with additional wood content, tree growth
 
 | | |
 |---|---|
-| **Current release** | **1.2.9** |
+| **Project version** | **1.2.10** |
+| **Latest published release** | **1.2.9** |
 | **Minecraft** | **1.21.1** |
 | **Mod loader** | **NeoForge** |
 | **NeoForge build** | 21.1.233 |
@@ -116,11 +117,10 @@ The following mods are required:
 - [Ars Nouveau](https://github.com/Ars-Nouveau/Ars-Nouveau) — provides the core Archwood ecosystem.
 - [Ars Elemental](https://github.com/Alexthw46/Ars-Elemental) — provides additional Archwood variants and integration.
 
-Optional integration:
+Optional integrations:
 
+- **TerraBlender** — enables natural world generation for the Dawning, Blinding, Fading, and Glacial Archwood biomes. It is optional, so Archwood Good can still launch without it; however, these four biomes will not generate naturally unless TerraBlender is installed.
 - **Cloth Config** — provides an in-game configuration screen for Giant Archwood Trees.
-
-TerraBlender is **not required**. Archwood Good's biomes can generate without it.
 
 Make sure you download dependency versions compatible with Minecraft 1.21.1 and your NeoForge installation. The exact dependency versions used for the current development build are listed in `gradle.properties`.
 
