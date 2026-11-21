@@ -1,6 +1,6 @@
 package com.alexthw.archwood_good.mixins;
 
-import alexthw.ars_elemental.common.rituals.forest.ArchfruitPod;
+import com.hollingsworth.arsnouveau.common.block.ArchfruitPod;
 import com.alexthw.archwood_good.worldgen.AWGBiomes;
 import com.hollingsworth.arsnouveau.api.ritual.ConjureBiomeRitual;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
