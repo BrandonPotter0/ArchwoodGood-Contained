@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * Registers Archwood Good saplings with Ars Elemental's 1.21.1
- * Archwood Forestation variant registry.
+ * Registers Archwood Good saplings and Archfruit pods with Ars Elemental's
+ * Archwood variant registry. These entries support both the Tablet of
+ * Forestation ritual (sapling lookup) and Conjure Island: Archwood Forest
+ * (Archfruit pod lookup).
  *
  * Called from common setup after Ars Elemental has initialized its own variants.
  */
