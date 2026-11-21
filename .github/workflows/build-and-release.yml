@@ -48,7 +48,7 @@ jobs:
             exit 1
           fi
 
-          MOD_VERSION=$(unzip -p "$JAR" META-INF/neoforge.mods.toml | sed -n 's/^version="\\([^"]*\\)"/\\1/p' | head -n 1)
+          MOD_VERSION=$(unzip -p "$JAR" META-INF/neoforge.mods.toml | grep '^version=' | head -n 1 | cut -d '"' -f 2)
           echo "Built JAR: $JAR"
           echo "Release version: $VERSION"
           echo "Embedded mod version: $MOD_VERSION"
