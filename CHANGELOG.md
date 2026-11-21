@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Added the vanilla Wither Rose as the Conjure Island: Archwood Forest offering for the Fading Archwood biome. The Wither Rose and Archfruit pod offerings are mutually exclusive.
+
 ## [1.2.11] - 2026-11-20
 
 ### Added
