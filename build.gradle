@@ -245,6 +245,11 @@ tasks.named('sourcesJar', Jar) {
 
 tasks.processResources {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    // Keep the NeoForge mod metadata version in lockstep with gradle.properties.
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand mod_version: project.version.toString()
+    }
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
