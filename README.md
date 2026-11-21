@@ -22,14 +22,14 @@ The mod expands the Archwood ecosystem with additional wood content, tree growth
 
 | | |
 |---|---|
-| **Project version** | **1.2.10** |
-| **Latest published release** | **1.2.10** |
+| **Project version** | **1.2.11** |
+| **Latest release** | **1.2.11** |
 | **Minecraft** | **1.21.1** |
 | **Mod loader** | **NeoForge** |
 | **NeoForge build** | 21.1.233 |
 | **License** | GNU Lesser General Public License v3.0 |
 
-**[⬇ Download Archwood Good 1.2.10](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases/tag/1.2.10)**
+**[⬇ Download Archwood Good 1.2.11](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases/tag/1.2.11)**
 
 For previous versions, see the [Releases page](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases).
 
