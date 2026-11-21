@@ -6,7 +6,7 @@ issueTrackerURL="https://github.com/Alexthw46/ArchwoodGood/issues?q=sort%3Aupdat
 license="GNU Lesser General Public License v3.0"
 [[mods]]
 modId="archwood_good"
-version="1.2.10"
+version="1.2.12"
 displayName="Archwood Good"
 logoFile="logo.png"
 credits="The Floofy Poofy,"

@@ -22,14 +22,14 @@ The mod expands the Archwood ecosystem with additional wood content, tree growth
 
 | | |
 |---|---|
-| **Project version** | **1.2.11** |
-| **Latest release** | **1.2.11** |
+| **Project version** | **1.2.12** |
+| **Latest release** | **1.2.12** |
 | **Minecraft** | **1.21.1** |
 | **Mod loader** | **NeoForge** |
 | **NeoForge build** | 21.1.233 |
 | **License** | GNU Lesser General Public License v3.0 |
 
-**[⬇ Download Archwood Good 1.2.11](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases/tag/1.2.11)**
+**[⬇ Download Archwood Good 1.2.12](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases/tag/1.2.12)**
 
 For previous versions, see the [Releases page](https://github.com/BrandonPotter0/ArchwoodGood-Contained/releases).
 
@@ -98,7 +98,7 @@ Archwood Good expands crafting and processing options for the Archwood family, i
 
 ### ✨ Ars Elemental ritual integration
 
-Archwood Good registers its Dawning and Blinding Archwood saplings and Archfruit pods with Ars Elemental's shared Archwood variant registry. This supports the Tablet of Forestation ritual and allows Dawnberry and Lightchee pods to augment **Conjure Island: Archwood Forest**, selecting the Dawning and Blinding Archwood biome keys respectively. Fading Archwood remains available through the Forestation ritual, while mixed Archwood forest generation retains the five original Ars Elemental variants alongside Dawning and Blinding.
+Archwood Good registers its Dawning and Blinding Archwood saplings and Archfruit pods with Ars Elemental's shared Archwood variant registry. This supports the Tablet of Forestation ritual and allows Dawnberry and Lightchee pods to augment **Conjure Island: Archwood Forest**, selecting the Dawning and Blinding Archwood biome keys respectively. Fading Archwood is available through the Tablet of Forestation ritual and can be selected for Conjure Island: Archwood Forest by offering a vanilla Wither Rose. Mixed Archwood forest generation retains the five original Ars Elemental variants alongside Dawning and Blinding.
 
 ## Installation
 
