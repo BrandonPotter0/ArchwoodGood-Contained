@@ -98,7 +98,7 @@ Archwood Good expands crafting and processing options for the Archwood family, i
 
 ### ✨ Ars Elemental ritual integration
 
-Archwood Good adds compatibility for Ars Elemental's Tablet of Forestation rituals, including custom forest variants for Dawning, Blinding, and Fading Archwood, as well as mixed Archwood forest generation. Corresponding Dawberry and Lightchee pod generation is also supported by these custom ritual variants.
+Archwood Good registers its Dawning and Blinding Archwood saplings and Archfruit pods with Ars Elemental's shared Archwood variant registry. This supports the Tablet of Forestation ritual and allows Dawnberry and Lightchee pods to augment **Conjure Island: Archwood Forest**, selecting the Dawning and Blinding Archwood biome keys respectively. Fading Archwood remains available through the Forestation ritual, while mixed Archwood forest generation retains the five original Ars Elemental variants alongside Dawning and Blinding.
 
 ## Installation
 
