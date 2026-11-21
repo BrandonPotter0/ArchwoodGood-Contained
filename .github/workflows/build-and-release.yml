@@ -53,6 +53,11 @@ jobs:
 
           MOD_VERSION=$(unzip -p "$JAR" META-INF/neoforge.mods.toml | grep '^version=' | head -n 1 | cut -d '"' -f 2)
           echo "Built JAR: $JAR"
+          EXPECTED_JAR="Archwood_Good-${VERSION}.jar"
+          if [[ "$(basename "$JAR")" != "$EXPECTED_JAR" ]]; then
+            echo "::error::Unexpected JAR filename. Expected $EXPECTED_JAR, got $(basename "$JAR")"
+            exit 1
+          fi
           echo "Release version: $VERSION"
           echo "Embedded mod version: $MOD_VERSION"
 
