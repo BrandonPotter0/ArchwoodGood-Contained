@@ -7,7 +7,8 @@
     "RuntimeDataGeneratorMixin",
     "GlacialMagelightParticleMixin",
     "GlacialTreePriorityMixin",
-    "ArchwoodForestationRitualMixin"
+    "ArchwoodForestationRitualMixin",
+    "ConjureIslandWitherRoseMixin"
   ],
   "injectors": {
     "defaultRequire": 0
