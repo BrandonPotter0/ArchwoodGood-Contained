@@ -1,5 +1,14 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Dawnberry and Lightchee Archfruit pods select the Dawning and Blinding Archwood biomes when used to augment Ars Elemental's Conjure Island: Archwood Forest ritual, using the existing Archwood variant registry.
+- Documented support for both Conjure Island and Tablet of Forestation ritual integrations.
+
+### Changed
+- Updated the Ars Elemental development dependency to 0.7.11.3 (CurseForge file 9716535).
+
 ## [1.2.9] - 2026-11-17
 
 ### Added
